@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Từ Vựng - Nguyễn Duyên</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff0f0;
+            padding: 40px 20px;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.15);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #ffeaea;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #d32f2f;
+            font-size: 36px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .header h2 {
+            color: #e53935;
+            font-size: 24px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            padding: 25px 20px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            background-color: #c62828;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(211, 47, 47, 0.4);
+        }
+        .card.special {
+            background-image: linear-gradient(135deg, #d32f2f, #b71c1c);
+            grid-column: 1 / -1;
+            font-size: 22px;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>HỌC TỪ VỰNG</h1>
+            <h2>NGUYỄN DUYÊN</h2>
+        </div>
+        
+        <div class="grid-container">
+            <a href="#" class="card">Mục 1: Vocab Reading</a>
+            <a href="speaking_flashcard.html" class="card">🚀 Mục 2: Vocab Speaking</a>
+            <a href="#" class="card">Mục 3: Vocab Writing</a>
+            <a href="#" class="card">Mục 4: Level B1_B2</a>
+            <a href="#" class="card">Mục 5: Level C1_C2</a>
+            <a href="#" class="card">Mục 6: Idiom</a>
+            <a href="#" class="card">Mục 7: Phrasal Verb</a>
+        </div>
+    </div>
+</body>
+</html>
