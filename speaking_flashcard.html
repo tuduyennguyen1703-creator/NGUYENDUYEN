@@ -483,13 +483,19 @@
                 if (synth.speaking) synth.cancel();
                 const utterThis = new SpeechSynthesisUtterance(text);
                 utterThis.rate = currentSpeed;
+                utterThis.volume = 1; // Ép âm lượng tối đa
                 
-                let ukVoice = voices.find(v => v.lang === 'en-GB' && v.name.includes('Google'))
-                           || voices.find(v => v.lang === 'en-GB' && v.name.includes('Daniel'))
-                           || voices.find(v => v.lang === 'en-GB')
-                           || voices.find(v => v.lang.startsWith('en'));
+                // Cải thiện bộ lọc giọng đọc: Ưu tiên Premium/Enhanced -> Giọng UK đời mới -> Giọng US Samantha rõ ràng
+                let bestVoice = voices.find(v => v.lang === 'en-GB' && v.name.includes('Google'))
+                             || voices.find(v => v.lang === 'en-GB' && (v.name.includes('Enhanced') || v.name.includes('Premium')))
+                             || voices.find(v => v.lang === 'en-GB' && v.name.includes('Arthur'))
+                             || voices.find(v => v.lang === 'en-GB' && v.name.includes('Martha'))
+                             || voices.find(v => v.lang === 'en-GB' && v.name.includes('Daniel'))
+                             || voices.find(v => v.name.includes('Samantha')) // Giọng nữ mặc định cực chuẩn trên iOS
+                             || voices.find(v => v.lang === 'en-GB')
+                             || voices.find(v => v.lang.startsWith('en'));
                 
-                if (ukVoice) utterThis.voice = ukVoice;
+                if (bestVoice) utterThis.voice = bestVoice;
                 synth.speak(utterThis);
             }
             // ---------------------------
