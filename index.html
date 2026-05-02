@@ -48,6 +48,7 @@
         }
         .card {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background-color: #f44336;
@@ -60,6 +61,30 @@
             text-align: center;
             box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-title {
+            z-index: 2;
+        }
+        .card-progress-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+            z-index: 2;
+            color: #ffeaea;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+        .card-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background-color: #2ecc71;
+            transition: width 0.5s ease;
+            z-index: 1;
         }
         .card:hover {
             background-color: #c62828;
@@ -91,14 +116,64 @@
         </div>
         
         <div class="grid-container">
-            <a href="reading_flashcard.html" class="card">📚 Mục 1: Vocab Reading</a>
-            <a href="speaking_flashcard.html" class="card">🚀 Mục 2: Vocab Speaking</a>
+            <a href="reading_flashcard.html" class="card" id="card-reading">
+                <span class="card-title">📚 Mục 1: Vocab Reading</span>
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar" style="width: 0%"></div>
+            </a>
+            <a href="speaking_flashcard.html" class="card" id="card-speaking">
+                <span class="card-title">🚀 Mục 2: Vocab Speaking</span>
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar" style="width: 0%"></div>
+            </a>
             <a href="#" class="card">Mục 3: Vocab Writing</a>
             <a href="#" class="card">Mục 4: Level B1_B2</a>
             <a href="#" class="card">Mục 5: Level C1_C2</a>
-            <a href="idiom_flashcard.html" class="card">💡 Mục 6: Idiom</a>
-            <a href="phrasalverb_flashcard.html" class="card">🧩 Mục 7: Phrasal Verb</a>
+            <a href="idiom_flashcard.html" class="card" id="card-idiom">
+                <span class="card-title">💡 Mục 6: Idiom</span>
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar" style="width: 0%"></div>
+            </a>
+            <a href="phrasalverb_flashcard.html" class="card" id="card-phrasalverb">
+                <span class="card-title">🧩 Mục 7: Phrasal Verb</span>
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar" style="width: 0%"></div>
+            </a>
         </div>
     </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            function updateProgress(id, prefix) {
+                const card = document.getElementById(id);
+                if (!card) return;
+                
+                const totalStr = localStorage.getItem(prefix + '_total_words');
+                const total = totalStr ? parseInt(totalStr) : 0;
+                
+                let learned = 0;
+                if (total > 0) {
+                    const learnedArray = JSON.parse(localStorage.getItem(prefix + '_learned_words')) || [];
+                    learned = learnedArray.length;
+                }
+                
+                let percent = 0;
+                if (total > 0) {
+                    percent = Math.round((learned / total) * 100);
+                }
+                
+                const textEl = card.querySelector('.card-progress-text');
+                const barEl = card.querySelector('.card-progress-bar');
+                
+                if (textEl) textEl.innerText = `Đã học: ${percent}%`;
+                if (barEl) barEl.style.width = `${percent}%`;
+            }
+
+            updateProgress('card-reading', 'reading');
+            updateProgress('card-speaking', 'speaking');
+            updateProgress('card-idiom', 'idiom');
+            updateProgress('card-phrasalverb', 'phrasalverb');
+        });
+    </script>
 </body>
 </html>
