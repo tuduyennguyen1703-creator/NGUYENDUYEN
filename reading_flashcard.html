@@ -404,6 +404,7 @@
             
             // Tải dữ liệu từ chưa thuộc từ Local Storage của thiết bị
             let difficultWords = JSON.parse(localStorage.getItem('reading_difficult_words')) || [];
+            let learnedWords = JSON.parse(localStorage.getItem('reading_learned_words')) || [];
 
             const btnOpenGroupSelect = document.getElementById('btnOpenGroupSelect');
             const groupOverlay = document.getElementById('groupOverlay');
@@ -423,6 +424,7 @@
             }
 
             function initApp() {
+                localStorage.setItem('reading_total_words', vocabData.length);
                 let savedGroups = JSON.parse(localStorage.getItem('reading_selected_groups')) || ['0'];
 
                 function renderCheckboxes() {
@@ -474,13 +476,20 @@
                         if (difficultWords.includes(w.num)) {
                             difficultWords = difficultWords.filter(id => id !== w.num);
                         }
+                        if (!learnedWords.includes(w.num)) {
+                            learnedWords.push(w.num);
+                        }
                     } else {
                         if (!difficultWords.includes(w.num)) {
                             difficultWords.push(w.num);
                         }
+                        if (learnedWords.includes(w.num)) {
+                            learnedWords = learnedWords.filter(id => id !== w.num);
+                        }
                     }
                     
                     localStorage.setItem('reading_difficult_words', JSON.stringify(difficultWords));
+                    localStorage.setItem('reading_learned_words', JSON.stringify(learnedWords));
 
                     if (currentIndex < currentGroup.length - 1) {
                         currentIndex++;
