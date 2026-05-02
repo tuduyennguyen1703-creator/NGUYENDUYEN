@@ -367,7 +367,7 @@
                     pwInput.focus();
                 }
             }
-
+            
             pwSubmit.addEventListener('click', checkPassword);
             pwInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') checkPassword();
@@ -376,6 +376,7 @@
             const wordsPerGroup = 20; let currentGroup = []; let currentIndex = 0;
             let isEnToVi = true; // Trạng thái học mặc định
             let difficultWords = JSON.parse(localStorage.getItem('phrasalverb_difficult_words')) || [];
+            let learnedWords = JSON.parse(localStorage.getItem('phrasalverb_learned_words')) || [];
 
             const btnOpenGroupSelect = document.getElementById('btnOpenGroupSelect');
             const groupOverlay = document.getElementById('groupOverlay');
@@ -410,6 +411,7 @@
             }
 
             function initApp() {
+                localStorage.setItem('phrasalverb_total_words', vocabData.length);
                 // Khôi phục trạng thái chiều học của lần trước
                 const savedDirection = localStorage.getItem('phrasalverb_direction');
                 if (savedDirection === 'vi-en') {
@@ -471,13 +473,20 @@
                         if (difficultWords.includes(w.num)) {
                             difficultWords = difficultWords.filter(id => id !== w.num);
                         }
+                        if (!learnedWords.includes(w.num)) {
+                            learnedWords.push(w.num);
+                        }
                     } else {
                         if (!difficultWords.includes(w.num)) {
                             difficultWords.push(w.num);
                         }
+                        if (learnedWords.includes(w.num)) {
+                            learnedWords = learnedWords.filter(id => id !== w.num);
+                        }
                     }
                     
                     localStorage.setItem('phrasalverb_difficult_words', JSON.stringify(difficultWords));
+                    localStorage.setItem('phrasalverb_learned_words', JSON.stringify(learnedWords));
 
                     if (currentIndex < currentGroup.length - 1) {
                         currentIndex++;
