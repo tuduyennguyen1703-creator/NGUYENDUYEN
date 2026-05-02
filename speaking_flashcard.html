@@ -293,6 +293,32 @@
         .btn-pw-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3); }
         #passwordError { color: #e74c3c; font-size: 14px; margin-top: -10px; margin-bottom: 15px; display: none; }
 
+        /* Overlay Chọn Nhóm */
+        #groupOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); display: none;
+            justify-content: center; align-items: center; z-index: 9998;
+        }
+        .group-box {
+            background: white; padding: 25px; border-radius: 20px;
+            width: 90%; max-width: 400px; max-height: 80vh; display: flex; flex-direction: column;
+            box-sizing: border-box; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .group-box h3 { margin-top: 0; color: #32325d; text-align: center; font-size: 20px; margin-bottom: 20px;}
+        .checkbox-list {
+            overflow-y: auto; flex-grow: 1; margin-bottom: 20px;
+            border: 1px solid #d1d9e6; border-radius: 12px; padding: 15px; text-align: left;
+        }
+        .checkbox-item { display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; color: #525f7f; cursor: pointer; }
+        .checkbox-item:last-child { margin-bottom: 0; }
+        .checkbox-item input { margin-right: 12px; width: 18px; height: 18px; cursor: pointer; accent-color: #667eea; }
+        .group-btn-group { display: flex; gap: 10px; }
+        .btn-group-action { flex: 1; padding: 12px; border: none; border-radius: 12px; font-weight: 500; font-size: 15px; cursor: pointer; transition: 0.3s; font-family: 'Poppins', sans-serif;}
+        .btn-cancel { background: #e3e8ee; color: #525f7f; }
+        .btn-cancel:hover { background: #d1d9e6; }
+        .btn-apply { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-apply:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3); }
+
         /* Responsive cho điện thoại di động */
         @media (max-width: 600px) {
             .header-container { flex-direction: column; margin-bottom: 25px; gap: 15px; }
@@ -329,6 +355,20 @@
         </div>
     </div>
 
+    <!-- Lớp phủ Chọn nhóm học bằng Checkbox -->
+    <div id="groupOverlay">
+        <div class="group-box">
+            <h3>Chọn nhóm từ vựng</h3>
+            <div class="checkbox-list" id="groupCheckboxList">
+                <!-- Checkboxes sẽ được tạo tự động -->
+            </div>
+            <div class="group-btn-group">
+                <button class="btn-group-action btn-cancel" id="btnCancelGroup">Hủy</button>
+                <button class="btn-group-action btn-apply" id="btnApplyGroup">Áp dụng</button>
+            </div>
+        </div>
+    </div>
+
     <div class="header-container">
         <!-- Nút bấm giúp bạn trở về trang chủ có 7 mục của bạn -->
         <a href="index.html" class="back-btn">⬅ Quay lại</a>
@@ -336,7 +376,7 @@
     </div>
 
     <div class="controls-top">
-        <select id="groupSelect"></select>
+        <button id="btnOpenGroupSelect" class="tool-btn">📚 Chọn nhóm học</button>
         <button id="btnReview" class="tool-btn">📖 Vào mục Cần ôn</button>
         <button id="btnShuffle" class="tool-btn">🔀 Đảo từ</button>
     </div>
@@ -406,7 +446,12 @@
             // Tải dữ liệu từ chưa thuộc từ Local Storage của thiết bị
             let difficultWords = JSON.parse(localStorage.getItem('speaking_difficult_words')) || [];
 
-            const groupSelect = document.getElementById('groupSelect'); const flashcard = document.getElementById('flashcard'); const flashcardContainer = document.getElementById('flashcardContainer');
+            const btnOpenGroupSelect = document.getElementById('btnOpenGroupSelect');
+            const groupOverlay = document.getElementById('groupOverlay');
+            const groupCheckboxList = document.getElementById('groupCheckboxList');
+            const btnCancelGroup = document.getElementById('btnCancelGroup');
+            const btnApplyGroup = document.getElementById('btnApplyGroup');
+            const flashcard = document.getElementById('flashcard'); const flashcardContainer = document.getElementById('flashcardContainer');
             const wordVi = document.getElementById('wordVi'); const wordEn = document.getElementById('wordEn'); const wordIpa = document.getElementById('wordIpa'); const wordPos = document.getElementById('wordPos'); const wordEx = document.getElementById('wordEx');
             const btnLearned = document.getElementById('btnLearned'); const btnNotLearned = document.getElementById('btnNotLearned'); const progressText = document.getElementById('progressText');
             const btnShuffle = document.getElementById('btnShuffle');
@@ -507,26 +552,45 @@
             }
 
             function initApp() {
-                // Thêm mục "Từ cần ôn tập" vào đầu danh sách
-                const specialOption = document.createElement('option'); 
-                specialOption.value = 'difficult';
-                specialOption.text = `⭐ Nhóm: Cần ôn tập (${difficultWords.length})`;
-                groupSelect.appendChild(specialOption);
+                let savedGroups = JSON.parse(localStorage.getItem('speaking_selected_groups')) || ['0'];
 
-                const totalGroups = Math.ceil(vocabData.length / wordsPerGroup);
-                for (let i = 0; i < totalGroups; i++) {
-                    const option = document.createElement('option'); option.value = i;
-                    option.text = `Nhóm ${i + 1} (Từ ${i * wordsPerGroup + 1} - ${Math.min((i + 1) * wordsPerGroup, vocabData.length)})`;
-                    groupSelect.appendChild(option);
+                function renderCheckboxes() {
+                    groupCheckboxList.innerHTML = '';
+                    
+                    const diffDiv = document.createElement('label');
+                    diffDiv.className = 'checkbox-item';
+                    diffDiv.innerHTML = `<input type="checkbox" value="difficult" ${savedGroups.includes('difficult') ? 'checked' : ''}> <strong>⭐ Nhóm: Cần ôn tập (${difficultWords.length})</strong>`;
+                    groupCheckboxList.appendChild(diffDiv);
+
+                    const totalGroups = Math.ceil(vocabData.length / wordsPerGroup);
+                    for (let i = 0; i < totalGroups; i++) {
+                        const lbl = document.createElement('label');
+                        lbl.className = 'checkbox-item';
+                        const isChecked = savedGroups.includes(i.toString()) ? 'checked' : '';
+                        lbl.innerHTML = `<input type="checkbox" value="${i}" ${isChecked}> Nhóm ${i + 1} (Từ ${i * wordsPerGroup + 1} - ${Math.min((i + 1) * wordsPerGroup, vocabData.length)})`;
+                        groupCheckboxList.appendChild(lbl);
+                    }
                 }
 
-                // Lấy nhóm học dở lần trước (nếu có)
-                const savedGroup = localStorage.getItem('speaking_current_group') || '0';
-                groupSelect.value = savedGroup;
+                btnOpenGroupSelect.addEventListener('click', () => {
+                    renderCheckboxes();
+                    groupOverlay.style.display = 'flex';
+                });
 
-                groupSelect.addEventListener('change', (e) => {
-                    localStorage.setItem('speaking_current_group', e.target.value);
-                    loadGroup(e.target.value);
+                btnCancelGroup.addEventListener('click', () => {
+                    groupOverlay.style.display = 'none';
+                });
+
+                btnApplyGroup.addEventListener('click', () => {
+                    const checkboxes = groupCheckboxList.querySelectorAll('input[type="checkbox"]:checked');
+                    savedGroups = Array.from(checkboxes).map(cb => cb.value);
+                    if (savedGroups.length === 0) {
+                        alert("Vui lòng chọn ít nhất 1 nhóm để học!");
+                        return;
+                    }
+                    localStorage.setItem('speaking_selected_groups', JSON.stringify(savedGroups));
+                    groupOverlay.style.display = 'none';
+                    loadGroups(savedGroups);
                 });
                 
                 flashcardContainer.addEventListener('click', () => {
@@ -560,8 +624,6 @@
                     }
                     
                     localStorage.setItem('speaking_difficult_words', JSON.stringify(difficultWords));
-                    const diffOption = groupSelect.querySelector('option[value="difficult"]');
-                    if (diffOption) diffOption.text = `⭐ Nhóm: Cần ôn tập (${difficultWords.length})`;
 
                     if (currentIndex < currentGroup.length - 1) {
                         currentIndex++;
@@ -585,28 +647,47 @@
                 
                 // Nút Xem từ cần ôn
                 btnReview.addEventListener('click', () => {
-                    groupSelect.value = 'difficult';
-                    localStorage.setItem('speaking_current_group', 'difficult');
-                    loadGroup('difficult');
+                    savedGroups = ['difficult'];
+                    localStorage.setItem('speaking_selected_groups', JSON.stringify(savedGroups));
+                    loadGroups(savedGroups);
                 });
 
-                loadGroup(savedGroup);
+                loadGroups(savedGroups);
             }
 
-            function loadGroup(groupValue) {
-                if (groupValue === 'difficult') {
-                    currentGroup = vocabData.filter(w => difficultWords.includes(w.num));
-                    if (currentGroup.length === 0) {
-                        wordVi.innerHTML = "<span style='font-size:24px'>Bạn đã thuộc hết từ!<br>Không có từ nào ở đây.</span>";
-                        wordEn.innerText = ""; wordIpa.innerText = ""; wordPos.innerText = ""; wordEx.innerText = "";
-                        btnLearned.disabled = true; btnNotLearned.disabled = true; btnShuffle.style.display = 'none';
-                        progressText.innerText = "0 / 0";
-                        return;
+            function loadGroups(groupValues) {
+                currentGroup = [];
+                let hasDifficult = false;
+
+                groupValues.forEach(val => {
+                    if (val === 'difficult') {
+                        const diffs = vocabData.filter(w => difficultWords.includes(w.num));
+                        currentGroup = currentGroup.concat(diffs);
+                        hasDifficult = true;
+                    } else {
+                        const groupIndex = parseInt(val);
+                        const chunk = vocabData.slice(groupIndex * wordsPerGroup, groupIndex * wordsPerGroup + wordsPerGroup);
+                        currentGroup = currentGroup.concat(chunk);
                     }
-                } else {
-                    const groupIndex = parseInt(groupValue);
-                    currentGroup = vocabData.slice(groupIndex * wordsPerGroup, groupIndex * wordsPerGroup + wordsPerGroup);
+                });
+
+                // Loại bỏ từ trùng lặp (tránh 1 từ xuất hiện 2 lần nếu nằm trong cả 2 danh sách được chọn)
+                currentGroup = currentGroup.filter((item, index, self) =>
+                    index === self.findIndex((t) => (t.num === item.num))
+                );
+
+                if (currentGroup.length === 0) {
+                    if (hasDifficult && groupValues.length === 1) {
+                        wordVi.innerHTML = "<span style='font-size:24px'>Tuyệt vời!<br>Không có từ nào cần ôn tập.</span>";
+                    } else {
+                        wordVi.innerHTML = "<span style='font-size:24px'>Bạn đã thuộc hết từ!<br>Không có từ nào ở đây.</span>";
+                    }
+                    wordEn.innerText = ""; wordIpa.innerText = ""; wordPos.innerText = ""; wordEx.innerText = "";
+                    btnLearned.disabled = true; btnNotLearned.disabled = true; btnShuffle.style.display = 'none';
+                    progressText.innerText = "0 / 0";
+                    return;
                 }
+
                 btnLearned.disabled = false; btnNotLearned.disabled = false; btnShuffle.style.display = 'inline-block';
                 currentIndex = 0; updateCard();
             }
