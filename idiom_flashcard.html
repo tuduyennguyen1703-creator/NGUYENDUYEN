@@ -297,13 +297,9 @@
         </div>
     </div>
 
-    <div class="mark-container">
-        <button id="btnMark" class="mark-btn">⭐ Cần ôn tập thêm</button>
-    </div>
-
     <div class="navigation">
-        <button id="btnPrev" class="nav-btn">Từ trước</button>
-        <button id="btnNext" class="nav-btn">Từ tiếp theo</button>
+        <button id="btnLearned" class="nav-btn" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);">Đã thuộc</button>
+        <button id="btnNotLearned" class="nav-btn" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">Chưa thuộc</button>
     </div>
     <div class="progress" id="progressText">0 / 0</div>
 
@@ -346,11 +342,10 @@
             const flashcardContainer = document.getElementById('flashcardContainer');
             const cardFront = document.getElementById('cardFront'); 
             const cardBack = document.getElementById('cardBack');
-            const btnPrev = document.getElementById('btnPrev'); 
-            const btnNext = document.getElementById('btnNext'); 
+            const btnLearned = document.getElementById('btnLearned'); 
+            const btnNotLearned = document.getElementById('btnNotLearned'); 
             const progressText = document.getElementById('progressText');
             const btnShuffle = document.getElementById('btnShuffle'); 
-            const btnMark = document.getElementById('btnMark');
             const btnReview = document.getElementById('btnReview');
             const btnToggleDirection = document.getElementById('btnToggleDirection');
 
@@ -402,8 +397,35 @@
                 });
                 
                 flashcardContainer.addEventListener('click', () => flashcard.classList.toggle('is-flipped'));
-                btnPrev.addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; updateCard(); } });
-                btnNext.addEventListener('click', () => { if (currentIndex < currentGroup.length - 1) { currentIndex++; updateCard(); } });
+
+                function handleWord(learned) {
+                    if (currentGroup.length === 0) return;
+                    const w = currentGroup[currentIndex];
+                    
+                    if (learned) {
+                        if (difficultWords.includes(w.num)) {
+                            difficultWords = difficultWords.filter(id => id !== w.num);
+                        }
+                    } else {
+                        if (!difficultWords.includes(w.num)) {
+                            difficultWords.push(w.num);
+                        }
+                    }
+                    
+                    localStorage.setItem('idiom_difficult_words', JSON.stringify(difficultWords));
+                    const diffOption = groupSelect.querySelector('option[value="difficult"]');
+                    if (diffOption) diffOption.text = `⭐ Nhóm: Cần ôn tập (${difficultWords.length})`;
+
+                    if (currentIndex < currentGroup.length - 1) {
+                        currentIndex++;
+                        updateCard();
+                    } else {
+                        alert("Bạn đã hoàn thành danh sách này!");
+                    }
+                }
+
+                btnLearned.addEventListener('click', () => handleWord(true));
+                btnNotLearned.addEventListener('click', () => handleWord(false));
                 
                 btnShuffle.addEventListener('click', () => {
                     for (let i = currentGroup.length - 1; i > 0; i--) {
@@ -429,22 +451,6 @@
                     setTimeout(() => { updateCard(); }, 150);
                 });
 
-                btnMark.addEventListener('click', () => {
-                    if (currentGroup.length === 0) return;
-                    const w = currentGroup[currentIndex];
-                    if (difficultWords.includes(w.num)) {
-                        difficultWords = difficultWords.filter(id => id !== w.num);
-                    } else {
-                        difficultWords.push(w.num);
-                    }
-                    localStorage.setItem('idiom_difficult_words', JSON.stringify(difficultWords));
-                    
-                    const diffOption = groupSelect.querySelector('option[value="difficult"]');
-                    if (diffOption) diffOption.text = `⭐ Nhóm: Cần ôn tập (${difficultWords.length})`;
-                    
-                    updateMarkButton(w.num);
-                });
-
                 loadGroup(savedGroup);
             }
 
@@ -454,7 +460,7 @@
                     if (currentGroup.length === 0) {
                         cardFront.innerHTML = "<div class='word-en' style='font-size:24px'>Bạn đã thuộc hết từ!<br>Không có từ nào ở đây.</div>";
                         cardBack.innerHTML = "";
-                        btnPrev.disabled = true; btnNext.disabled = true; btnMark.style.display = 'none'; btnShuffle.style.display = 'none';
+                        btnLearned.disabled = true; btnNotLearned.disabled = true; btnShuffle.style.display = 'none';
                         progressText.innerText = "0 / 0";
                         return;
                     }
@@ -462,7 +468,7 @@
                     const groupIndex = parseInt(groupValue);
                     currentGroup = vocabData.slice(groupIndex * wordsPerGroup, groupIndex * wordsPerGroup + wordsPerGroup);
                 }
-                btnMark.style.display = 'inline-block'; btnShuffle.style.display = 'inline-block';
+                btnLearned.disabled = false; btnNotLearned.disabled = false; btnShuffle.style.display = 'inline-block';
                 currentIndex = 0; updateCard();
             }
 
@@ -487,19 +493,7 @@
                     }
 
                     progressText.innerText = `Từ ${currentIndex + 1} / ${currentGroup.length}`;
-                    btnPrev.disabled = currentIndex === 0; btnNext.disabled = currentIndex === currentGroup.length - 1;
-                    updateMarkButton(w.num);
                 }, 150); 
-            }
-
-            function updateMarkButton(wordNum) {
-                if (difficultWords.includes(wordNum)) {
-                    btnMark.innerText = "🌟 Đã nhớ (Bỏ đánh dấu)";
-                    btnMark.classList.add('marked');
-                } else {
-                    btnMark.innerText = "⭐ Cần ôn tập thêm";
-                    btnMark.classList.remove('marked');
-                }
             }
         });
     </script>
