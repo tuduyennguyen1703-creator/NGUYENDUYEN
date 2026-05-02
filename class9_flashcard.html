@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 9 Vocabulary Flashcards</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5% 3%;
+            margin: 0;
+            color: #2b2b2b;
+            box-sizing: border-box;
+        }
+        .header-container {
+            width: 95%;
+            max-width: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .back-btn {
+            position: absolute;
+            left: 0;
+            text-decoration: none;
+            background-color: transparent;
+            color: #6b7c93;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            border: 1px solid #d1d9e6;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #ffffff;
+            color: #32325d;
+            box-shadow: 0 4px 6px rgba(50,50,93,0.11), 0 1px 3px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #32325d;
+            margin: 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+        }
+        .controls-top {
+            display: flex;
+            gap: 2%;
+            margin-bottom: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 95%;
+            max-width: 700px;
+        }
+        .tool-btn {
+            padding: 10px 5%;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            background-color: #ffffff;
+            color: #32325d;
+            border: 1px solid #d1d9e6;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(50,50,93,0.05);
+        }
+        .tool-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50,50,93,0.1), 0 3px 6px rgba(0,0,0,0.08);
+            color: #825ee4;
+            border-color: #825ee4;
+        }
+        #btnReview {
+            color: #e74c3c;
+        }
+        #btnReview:hover {
+            border-color: #e74c3c;
+        }
+        .flashcard-container {
+            width: 95%;
+            max-width: 600px;
+            height: 350px;
+            perspective: 1200px;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            position: relative;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(50,50,93,0.1), 0 5px 15px rgba(0,0,0,0.07);
+            padding: 8%;
+            box-sizing: border-box;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .card-front {
+            background: linear-gradient(145deg, #ffffff 0%, #fdfdfd 100%);
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(145deg, #ffffff 0%, #f4f7fb 100%);
+        }
+        .word-vi { font-size: 32px; font-weight: 600; color: #32325d; margin-bottom: 12px; }
+        .word-en { 
+            font-size: 38px; 
+            font-weight: 700; 
+            margin-bottom: 12px; 
+            background: linear-gradient(to right, #5e72e4, #825ee4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .word-ipa { font-size: 18px; color: #8898aa; margin-bottom: 6px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .word-pos { font-size: 16px; color: #adb5bd; font-style: italic; margin-bottom: 15px; }
+        .word-ex { font-size: 17px; margin-top: 15px; color: #525f7f; line-height: 1.6; font-weight: 300; }
+        
+        .navigation { 
+            display: flex; gap: 4%; margin-bottom: 20px; 
+            width: 95%; max-width: 600px; justify-content: center;
+        }
+        button.nav-btn { 
+            width: 48%;
+            box-sizing: border-box;
+            padding: 14px 0; 
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 30px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        button.nav-btn:hover:not(:disabled) { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.4);
+        }
+        button.nav-btn:active:not(:disabled) { transform: translateY(0); }
+        button.nav-btn:disabled { 
+            background: #e3e8ee; 
+            color: #adb5bd;
+            box-shadow: none;
+            cursor: not-allowed; 
+        }
+        .progress { font-size: 15px; color: #8898aa; font-weight: 500; letter-spacing: 1px; }
+
+        /* Overlay Mật Khẩu */
+        #passwordOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .password-box {
+            background: white; padding: 40px; border-radius: 24px; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); max-width: 400px; width: 90%; box-sizing: border-box;
+        }
+        .password-box h2 { color: #32325d; margin-top: 0; }
+        .password-box p { color: #525f7f; margin-bottom: 20px; }
+        .password-box input {
+            width: 100%; padding: 14px 20px; margin-bottom: 20px;
+            border: 1px solid #d1d9e6; border-radius: 12px; font-size: 16px;
+            font-family: 'Poppins', sans-serif; box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        .password-box input:focus { border-color: #825ee4; box-shadow: 0 0 0 3px rgba(130, 94, 228, 0.2); }
+        .password-btn-group { display: flex; gap: 15px; justify-content: center; width: 100%; }
+        .btn-pw-back {
+            flex: 1; box-sizing: border-box; padding: 12px 0; text-decoration: none; color: #525f7f; background: #e3e8ee;
+            border-radius: 12px; font-weight: 500; transition: 0.3s; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-pw-back:hover { background: #d1d9e6; }
+        .btn-pw-submit {
+            flex: 1; box-sizing: border-box; padding: 12px 0; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border-radius: 12px; font-weight: 500; font-size: 16px; cursor: pointer; transition: 0.3s;
+            font-family: 'Poppins', sans-serif;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-pw-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3); }
+        #passwordError { color: #e74c3c; font-size: 14px; margin-top: -10px; margin-bottom: 15px; display: none; }
+
+        /* Overlay Chọn Nhóm */
+        #groupOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); display: none;
+            justify-content: center; align-items: center; z-index: 9998;
+        }
+        .group-box {
+            background: white; padding: 25px; border-radius: 20px;
+            width: 90%; max-width: 400px; max-height: 80vh; display: flex; flex-direction: column;
+            box-sizing: border-box; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .group-box h3 { margin-top: 0; color: #32325d; text-align: center; font-size: 20px; margin-bottom: 20px;}
+        .checkbox-list {
+            overflow-y: auto; flex-grow: 1; margin-bottom: 20px;
+            border: 1px solid #d1d9e6; border-radius: 12px; padding: 15px; text-align: left;
+        }
+        .checkbox-item { display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; color: #525f7f; cursor: pointer; }
+        .checkbox-item:last-child { margin-bottom: 0; }
+        .checkbox-item input { margin-right: 12px; width: 18px; height: 18px; cursor: pointer; accent-color: #667eea; }
+        .group-btn-group { display: flex; gap: 10px; }
+        .btn-group-action { flex: 1; padding: 12px; border: none; border-radius: 12px; font-weight: 500; font-size: 15px; cursor: pointer; transition: 0.3s; font-family: 'Poppins', sans-serif;}
+        .btn-cancel { background: #e3e8ee; color: #525f7f; }
+        .btn-cancel:hover { background: #d1d9e6; }
+        .btn-apply { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-apply:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3); }
+
+        /* Responsive cho điện thoại di động */
+        @media (max-width: 600px) {
+            .header-container { flex-direction: column; margin-bottom: 25px; gap: 15px; }
+            .back-btn { position: static; align-self: flex-start; }
+            h1 { font-size: 24px; }
+            .controls-top { flex-direction: column; gap: 10px; }
+            select, .tool-btn { width: 100%; box-sizing: border-box; }
+            .flashcard-container { height: 420px; }
+            .card-face { padding: 6%; }
+            .word-vi { font-size: 24px; }
+            .word-en { font-size: 28px; }
+            .word-ipa { font-size: 16px; }
+            .word-pos { font-size: 14px; margin-bottom: 10px; }
+            .word-ex { font-size: 15px; margin-top: 10px; line-height: 1.4; }
+            button.nav-btn { font-size: 14px; padding: 12px 0; }
+            .password-box { padding: 30px 20px; }
+            .password-btn-group { flex-direction: column; gap: 12px; }
+            .btn-pw-back, .btn-pw-submit { width: 100%; flex: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Lớp phủ yêu cầu mật khẩu -->
+    <div id="passwordOverlay">
+        <div class="password-box">
+            <h2>Nhập mật khẩu</h2>
+            <p>Vui lòng nhập mật khẩu để học mục <strong>Class 9</strong>.</p>
+            <input type="password" id="passwordInput" placeholder="Mật khẩu...">
+            <p id="passwordError">Mật khẩu không đúng, vui lòng thử lại!</p>
+            <div class="password-btn-group">
+                <a href="index.html" class="btn-pw-back">Quay lại</a>
+                <button id="btnSubmitPassword" class="btn-pw-submit">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lớp phủ Chọn nhóm học bằng Checkbox -->
+    <div id="groupOverlay">
+        <div class="group-box">
+            <h3>Chọn nhóm từ vựng</h3>
+            <div class="checkbox-list" id="groupCheckboxList">
+                <!-- Checkboxes sẽ được tạo tự động -->
+            </div>
+            <div class="group-btn-group">
+                <button class="btn-group-action btn-cancel" id="btnCancelGroup">Hủy</button>
+                <button class="btn-group-action btn-apply" id="btnApplyGroup">Áp dụng</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-container">
+        <a href="index.html" class="back-btn">⬅ Quay lại</a>
+        <h1>Ôn Từ Vựng Class 9</h1>
+    </div>
+
+    <div class="controls-top">
+        <button id="btnOpenGroupSelect" class="tool-btn">📚 Chọn nhóm học</button>
+        <button id="btnReview" class="tool-btn">📖 Vào mục Cần ôn</button>
+        <button id="btnShuffle" class="tool-btn">🔀 Đảo từ</button>
+    </div>
+
+    <div class="flashcard-container" id="flashcardContainer">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face card-front"><div class="word-en" id="wordEn">Loading...</div></div>
+            <div class="card-face card-back">
+                <div class="word-vi" id="wordVi">Đang tải dữ liệu...</div>
+                <div class="word-ipa" id="wordIpa"></div><div class="word-pos" id="wordPos"></div><div class="word-ex" id="wordEx"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button id="btnLearned" class="nav-btn" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);">Đã thuộc</button>
+        <button id="btnNotLearned" class="nav-btn" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">Chưa thuộc</button>
+    </div>
+    <div class="progress" id="progressText">0 / 0</div>
+
+    <script src="vocabclass9.js" charset="UTF-8"></script>
+    <script>
+        window.addEventListener('load', () => {
+            // --- CẤU HÌNH MẬT KHẨU MỤC NÀY ---
+            const SECTION_PASSWORD = "2026"; // <-- THAY ĐỔI MẬT KHẨU CỦA BẠN TẠI ĐÂY
+
+            const overlay = document.getElementById('passwordOverlay');
+            const pwInput = document.getElementById('passwordInput');
+            const pwSubmit = document.getElementById('btnSubmitPassword');
+            const pwError = document.getElementById('passwordError');
+
+            if (sessionStorage.getItem('unlocked_class9') === 'true') {
+                overlay.style.display = 'none';
+            }
+
+            function checkPassword() {
+                if (pwInput.value === SECTION_PASSWORD) {
+                    sessionStorage.setItem('unlocked_class9', 'true');
+                    overlay.style.display = 'none';
+                } else {
+                    pwError.style.display = 'block';
+                    pwInput.value = '';
+                    pwInput.focus();
+                }
+            }
+
+            pwSubmit.addEventListener('click', checkPassword);
+            pwInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkPassword();
+            });
+            // ----------------------------------
+
+            const wordsPerGroup = 20; let currentGroup = []; let currentIndex = 0;
+            
+            let difficultWords = JSON.parse(localStorage.getItem('class9_difficult_words')) || [];
+            let learnedWords = JSON.parse(localStorage.getItem('class9_learned_words')) || [];
+
+            const btnOpenGroupSelect = document.getElementById('btnOpenGroupSelect');
+            const groupOverlay = document.getElementById('groupOverlay');
+            const groupCheckboxList = document.getElementById('groupCheckboxList');
+            const btnCancelGroup = document.getElementById('btnCancelGroup');
+            const btnApplyGroup = document.getElementById('btnApplyGroup');
+            const flashcard = document.getElementById('flashcard'); const flashcardContainer = document.getElementById('flashcardContainer');
+            const wordVi = document.getElementById('wordVi'); const wordEn = document.getElementById('wordEn'); const wordIpa = document.getElementById('wordIpa'); const wordPos = document.getElementById('wordPos'); const wordEx = document.getElementById('wordEx');
+            const btnLearned = document.getElementById('btnLearned'); const btnNotLearned = document.getElementById('btnNotLearned'); const progressText = document.getElementById('progressText');
+            const btnShuffle = document.getElementById('btnShuffle');
+            const btnReview = document.getElementById('btnReview');
+
+            let vocabData = [];
+            if (typeof vocabList !== 'undefined') {
+                // Chuyển đổi dữ liệu từ vocabList sang vocabData để tương thích với giao diện
+                vocabData = vocabList.map(item => ({
+                    num: item.id,
+                    en: item.word,
+                    vi: item.meaning,
+                    ipa: "", // Không có cột phiên âm trong vocabclass9.js
+                    pos: item.type,
+                    ex: "" // Không có ví dụ trong vocabclass9.js
+                }));
+                initApp();
+            } else {
+                wordEn.innerHTML = "<span style='font-size:20px'>Lỗi: Không nạp được vocabclass9.js<br>Hãy nhấp đúp mở file trực tiếp!</span>";
+            }
+
+            function initApp() {
+                localStorage.setItem('class9_total_words', vocabData.length);
+                let savedGroups = JSON.parse(localStorage.getItem('class9_selected_groups')) || ['0'];
+
+                function renderCheckboxes() {
+                    groupCheckboxList.innerHTML = '';
+                    
+                    const diffDiv = document.createElement('label');
+                    diffDiv.className = 'checkbox-item';
+                    diffDiv.innerHTML = `<input type="checkbox" value="difficult" ${savedGroups.includes('difficult') ? 'checked' : ''}> <strong>⭐ Nhóm: Cần ôn tập (${difficultWords.length})</strong>`;
+                    groupCheckboxList.appendChild(diffDiv);
+
+                    const totalGroups = Math.ceil(vocabData.length / wordsPerGroup);
+                    for (let i = 0; i < totalGroups; i++) {
+                        const lbl = document.createElement('label');
+                        lbl.className = 'checkbox-item';
+                        const isChecked = savedGroups.includes(i.toString()) ? 'checked' : '';
+                        lbl.innerHTML = `<input type="checkbox" value="${i}" ${isChecked}> Nhóm ${i + 1} (Từ ${i * wordsPerGroup + 1} - ${Math.min((i + 1) * wordsPerGroup, vocabData.length)})`;
+                        groupCheckboxList.appendChild(lbl);
+                    }
+                }
+
+                btnOpenGroupSelect.addEventListener('click', () => {
+                    renderCheckboxes();
+                    groupOverlay.style.display = 'flex';
+                });
+
+                btnCancelGroup.addEventListener('click', () => {
+                    groupOverlay.style.display = 'none';
+                });
+
+                btnApplyGroup.addEventListener('click', () => {
+                    const checkboxes = groupCheckboxList.querySelectorAll('input[type="checkbox"]:checked');
+                    savedGroups = Array.from(checkboxes).map(cb => cb.value);
+                    if (savedGroups.length === 0) {
+                        alert("Vui lòng chọn ít nhất 1 nhóm để học!");
+                        return;
+                    }
+                    localStorage.setItem('class9_selected_groups', JSON.stringify(savedGroups));
+                    groupOverlay.style.display = 'none';
+                    loadGroups(savedGroups);
+                });
+                
+                flashcardContainer.addEventListener('click', () => flashcard.classList.toggle('is-flipped'));
+                
+                function handleWord(learned) {
+                    if (currentGroup.length === 0) return;
+                    const w = currentGroup[currentIndex];
+                    
+                    if (learned) {
+                        if (difficultWords.includes(w.num)) {
+                            difficultWords = difficultWords.filter(id => id !== w.num);
+                        }
+                        if (!learnedWords.includes(w.num)) {
+                            learnedWords.push(w.num);
+                        }
+                    } else {
+                        if (!difficultWords.includes(w.num)) {
+                            difficultWords.push(w.num);
+                        }
+                        if (learnedWords.includes(w.num)) {
+                            learnedWords = learnedWords.filter(id => id !== w.num);
+                        }
+                    }
+                    
+                    localStorage.setItem('class9_difficult_words', JSON.stringify(difficultWords));
+                    localStorage.setItem('class9_learned_words', JSON.stringify(learnedWords));
+
+                    if (currentIndex < currentGroup.length - 1) {
+                        currentIndex++;
+                        updateCard();
+                    } else {
+                        alert("Bạn đã hoàn thành danh sách này!");
+                    }
+                }
+
+                btnLearned.addEventListener('click', () => handleWord(true));
+                btnNotLearned.addEventListener('click', () => handleWord(false));
+                
+                btnShuffle.addEventListener('click', () => {
+                    for (let i = currentGroup.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [currentGroup[i], currentGroup[j]] = [currentGroup[j], currentGroup[i]];
+                    }
+                    currentIndex = 0; updateCard();
+                });
+                
+                btnReview.addEventListener('click', () => {
+                    savedGroups = ['difficult'];
+                    localStorage.setItem('class9_selected_groups', JSON.stringify(savedGroups));
+                    loadGroups(savedGroups);
+                });
+
+                loadGroups(savedGroups);
+            }
+
+            function loadGroups(groupValues) {
+                currentGroup = [];
+                let hasDifficult = false;
+
+                groupValues.forEach(val => {
+                    if (val === 'difficult') {
+                        const diffs = vocabData.filter(w => difficultWords.includes(w.num));
+                        currentGroup = currentGroup.concat(diffs);
+                        hasDifficult = true;
+                    } else {
+                        const groupIndex = parseInt(val);
+                        const chunk = vocabData.slice(groupIndex * wordsPerGroup, groupIndex * wordsPerGroup + wordsPerGroup);
+                        currentGroup = currentGroup.concat(chunk);
+                    }
+                });
+
+                currentGroup = currentGroup.filter((item, index, self) =>
+                    index === self.findIndex((t) => (t.num === item.num))
+                );
+
+                if (currentGroup.length === 0) {
+                    if (hasDifficult && groupValues.length === 1) {
+                        wordEn.innerHTML = "<span style='font-size:24px'>Tuyệt vời!<br>Không có từ nào cần ôn tập.</span>";
+                    } else {
+                        wordEn.innerHTML = "<span style='font-size:24px'>Bạn đã thuộc hết từ!<br>Không có từ nào ở đây.</span>";
+                    }
+                    wordVi.innerText = ""; wordIpa.innerText = ""; wordPos.innerText = ""; wordEx.innerText = "";
+                    btnLearned.disabled = true; btnNotLearned.disabled = true; btnShuffle.style.display = 'none';
+                    progressText.innerText = "0 / 0";
+                    return;
+                }
+
+                btnLearned.disabled = false; btnNotLearned.disabled = false; btnShuffle.style.display = 'inline-block';
+                currentIndex = 0; updateCard();
+            }
+
+            function updateCard() {
+                if (currentGroup.length === 0) return;
+                flashcard.classList.remove('is-flipped');
+                setTimeout(() => {
+                    const w = currentGroup[currentIndex];
+                    wordVi.innerText = w.vi; wordEn.innerText = w.en; wordIpa.innerText = w.ipa; wordPos.innerText = w.pos; wordEx.innerText = w.ex;
+                    progressText.innerText = `Từ ${currentIndex + 1} / ${currentGroup.length}`;
+                }, 150); 
+            }
+        });
+    </script>
+</body>
+</html>
