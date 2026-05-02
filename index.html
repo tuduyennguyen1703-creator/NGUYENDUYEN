@@ -8,16 +8,18 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #fff0f0;
-            padding: 40px 20px;
+            padding: 5% 2%;
             margin: 0;
             color: #333;
         }
         .container {
+            width: 90%;
             max-width: 1000px;
             margin: 0 auto;
             background: white;
-            padding: 40px;
+            padding: 5%;
             border-radius: 15px;
+            box-sizing: border-box;
             box-shadow: 0 10px 25px rgba(231, 76, 60, 0.15);
         }
         .header {
@@ -41,7 +43,7 @@
         }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
             gap: 20px;
         }
         .card {
@@ -51,7 +53,7 @@
             background-color: #f44336;
             color: white;
             text-decoration: none;
-            padding: 30px 25px;
+            padding: 6% 5%;
             border-radius: 12px;
             font-size: 18px;
             font-weight: bold;
@@ -68,7 +70,16 @@
             background-image: linear-gradient(135deg, #d32f2f, #b71c1c);
             grid-column: 1 / -1;
             font-size: 22px;
-            padding: 30px;
+            padding: 6% 5%;
+        }
+
+        /* Responsive cho thiết bị di động */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 28px; }
+            .header h2 { font-size: 20px; }
+            .card { font-size: 16px; padding: 20px 15px; }
+            .card.special { font-size: 18px; }
+            .grid-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -80,12 +91,12 @@
         </div>
         
         <div class="grid-container">
-            <a href="#" class="card">Mục 1: Vocab Reading</a>
+            <a href="reading_flashcard.html" class="card">📚 Mục 1: Vocab Reading</a>
             <a href="speaking_flashcard.html" class="card">🚀 Mục 2: Vocab Speaking</a>
             <a href="#" class="card">Mục 3: Vocab Writing</a>
             <a href="#" class="card">Mục 4: Level B1_B2</a>
             <a href="#" class="card">Mục 5: Level C1_C2</a>
-            <a href="#" class="card">Mục 6: Idiom</a>
+            <a href="idiom_flashcard.html" class="card">💡 Mục 6: Idiom</a>
             <a href="#" class="card">Mục 7: Phrasal Verb</a>
         </div>
     </div>
