@@ -4,16 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Học Từ Vựng - Nguyễn Duyên</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        :root {
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --color-primary: #d32f2f;
+            --color-primary-dark: #c62828;
+            --color-primary-darker: #b71c1c;
+            --color-card-bg: #f44336;
+            --color-light-bg: #ffeaea;
+            --color-success: #2ecc71;
+            --color-shadow: rgba(211, 47, 47, 0.3);
+            --color-shadow-dark: rgba(211, 47, 47, 0.4);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
 
-        input, button, select, textarea, a {
-            font-family: inherit;
+        * {
+            box-sizing: border-box;
+            font-family: var(--font-stack);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            background: linear-gradient(135deg, #fff0f0 0%, #ffeaea 100%);
+            background: linear-gradient(135deg, #fff0f0 0%, var(--color-light-bg) 100%);
             min-height: 100vh;
             padding: 5% 2%;
             margin: 0;
@@ -21,6 +36,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+
         .container {
             width: 90%;
             max-width: 1000px;
@@ -28,86 +44,88 @@
             background: white;
             padding: clamp(20px, 5%, 40px);
             border-radius: 15px;
-            box-sizing: border-box;
-            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.15);
+            box-shadow: 0 10px 25px var(--color-shadow);
         }
+
         .header {
             text-align: center;
             margin-bottom: 40px;
-            border-bottom: 3px solid #ffeaea;
+            border-bottom: 3px solid var(--color-light-bg);
             padding-bottom: 20px;
         }
+
         .header h1 {
-            color: #d32f2f;
+            color: var(--color-primary);
             font-size: clamp(26px, 5vw, 38px);
             margin: 0 0 10px 0;
             text-transform: uppercase;
             letter-spacing: 2px;
+            font-weight: 700;
         }
+
         .header h2 {
             color: #e53935;
             font-size: clamp(16px, 3vw, 24px);
             margin: 0;
             font-weight: 600;
         }
+
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
             gap: 20px;
         }
+
         .card {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: #f44336;
+            background-color: var(--color-card-bg);
             color: white;
             text-decoration: none;
             padding: clamp(20px, 5vw, 30px);
-            border-radius: 12px;
+            border-radius: var(--radius);
             font-size: clamp(16px, 2.5vw, 18px);
-            font-weight: bold;
+            font-weight: 600;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px var(--color-shadow);
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
         }
+
+        .card:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px var(--color-shadow-dark);
+        }
+
         .card-title {
             z-index: 2;
         }
+
         .card-progress-text {
             font-size: 13px;
             font-weight: 500;
             margin-top: 8px;
             z-index: 2;
-            color: #ffeaea;
+            color: var(--color-light-bg);
             background: rgba(0, 0, 0, 0.2);
             padding: 3px 10px;
             border-radius: 10px;
         }
+
         .card-progress-bar {
             position: absolute;
             bottom: 0;
             left: 0;
             height: 6px;
-            background-color: #2ecc71;
+            background-color: var(--color-success);
             transition: width 0.5s ease;
             z-index: 1;
         }
-        .card:hover {
-            background-color: #c62828;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(211, 47, 47, 0.4);
-        }
-        .card.special {
-            background-image: linear-gradient(135deg, #d32f2f, #b71c1c);
-            grid-column: 1 / -1;
-            font-size: 22px;
-            padding: 6% 5%;
-        }
 
-        /* Responsive cho thiết bị di động */
         @media (max-width: 600px) {
             .grid-container { grid-template-columns: 1fr; }
             .container { width: 95%; padding: 20px 15px; }
@@ -125,12 +143,12 @@
             <a href="reading_flashcard.html" class="card" id="card-reading">
                 <span class="card-title">📚 Mục 1: Vocab Reading</span>
                 <span class="card-progress-text">Đã học: 0%</span>
-                <div class="card-progress-bar" style="width: 0%"></div>
+                <div class="card-progress-bar"></div>
             </a>
             <a href="speaking_flashcard.html" class="card" id="card-speaking">
                 <span class="card-title">🚀 Mục 2: Vocab Speaking</span>
                 <span class="card-progress-text">Đã học: 0%</span>
-                <div class="card-progress-bar" style="width: 0%"></div>
+                <div class="card-progress-bar"></div>
             </a>
             <a href="#" class="card">Mục 3: Vocab Writing</a>
             <a href="#" class="card">Mục 4: Level B1_B2</a>
@@ -138,62 +156,61 @@
             <a href="idiom_flashcard.html" class="card" id="card-idiom">
                 <span class="card-title">💡 Mục 6: Idiom</span>
                 <span class="card-progress-text">Đã học: 0%</span>
-                <div class="card-progress-bar" style="width: 0%"></div>
+                <div class="card-progress-bar"></div>
             </a>
             <a href="phrasalverb_flashcard.html" class="card" id="card-phrasalverb">
                 <span class="card-title">🧩 Mục 7: Phrasal Verb</span>
                 <span class="card-progress-text">Đã học: 0%</span>
-                <div class="card-progress-bar" style="width: 0%"></div>
+                <div class="card-progress-bar"></div>
             </a>
             <a href="class9_flashcard.html" class="card" id="card-class9">
                 <span class="card-title">🏫 Mục 8: Vocab Class 9</span>
                 <span class="card-progress-text">Đã học: 0%</span>
-                <div class="card-progress-bar" style="width: 0%"></div>
+                <div class="card-progress-bar"></div>
             </a>
             <a href="readingielts.html" class="card" id="card-readingielts">
                 <span class="card-title">📖 Mục 9: Reading IELTS</span>
                 <span class="card-progress-text">Đã học: 0%</span>
-                <div class="card-progress-bar" style="width: 0%"></div>
+                <div class="card-progress-bar"></div>
             </a>
         </div>
     </div>
 
     <script>
+        const PROGRESS_DATA = [
+            { id: 'card-reading', prefix: 'reading' },
+            { id: 'card-speaking', prefix: 'speaking' },
+            { id: 'card-idiom', prefix: 'idiom' },
+            { id: 'card-phrasalverb', prefix: 'phrasalverb' },
+            { id: 'card-class9', prefix: 'class9' },
+            { id: 'card-readingielts', prefix: 'readingielts' }
+        ];
+
         window.addEventListener('DOMContentLoaded', () => {
-            function updateProgress(id, prefix) {
+            PROGRESS_DATA.forEach(({ id, prefix }) => {
                 const card = document.getElementById(id);
                 if (!card) return;
-                
-                let totalStr = null;
-                try { totalStr = localStorage.getItem(prefix + '_total_words'); } catch(e) {}
-                const total = totalStr ? parseInt(totalStr) : 0;
-                
+
+                const total = parseInt(localStorage.getItem(prefix + '_total_words')) || 0;
                 let learned = 0;
+
                 if (total > 0) {
                     try {
                         const learnedArray = JSON.parse(localStorage.getItem(prefix + '_learned_words'));
-                        if (Array.isArray(learnedArray)) learned = learnedArray.length;
-                    } catch(e) {}
+                        learned = Array.isArray(learnedArray) ? learnedArray.length : 0;
+                    } catch (e) {
+                        learned = 0;
+                    }
                 }
-                
-                let percent = 0;
-                if (total > 0) {
-                    percent = Math.round((learned / total) * 100);
-                }
-                
+
+                const percent = total > 0 ? Math.round((learned / total) * 100) : 0;
+
                 const textEl = card.querySelector('.card-progress-text');
                 const barEl = card.querySelector('.card-progress-bar');
-                
-                if (textEl) textEl.innerText = `Đã học: ${percent}%`;
-                if (barEl) barEl.style.width = `${percent}%`;
-            }
 
-            updateProgress('card-reading', 'reading');
-            updateProgress('card-speaking', 'speaking');
-            updateProgress('card-idiom', 'idiom');
-            updateProgress('card-phrasalverb', 'phrasalverb');
-            updateProgress('card-class9', 'class9');
-            updateProgress('card-readingielts', 'readingielts');
+                if (textEl) textEl.textContent = `Đã học: ${percent}%`;
+                if (barEl) barEl.style.width = `${percent}%`;
+            });
         });
     </script>
 </body>

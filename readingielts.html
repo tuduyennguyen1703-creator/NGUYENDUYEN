@@ -22,6 +22,7 @@
             font-weight: 300;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
             background: linear-gradient(135deg, #f5f7fa 0%, #e8edf5 100%);
             color: #2c3e50;
             display: flex;
@@ -107,7 +108,7 @@
         .flashcard-container {
             width: 100%;
             max-width: 760px;
-            height: 360px;
+            height: clamp(340px, 60vh, 480px);
             perspective: 1200px;
             margin-bottom: 20px;
         }
@@ -159,38 +160,41 @@
         }
 
         .word-en {
-            font-size: 28px;
+            font-size: clamp(24px, 5vw, 34px);
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 14px;
             color: #2c3e50;
+            padding: 0 10px;
         }
 
         .word-ipa {
             color: #6c7a93;
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
             margin-bottom: 18px;
             font-style: italic;
         }
 
         .word-vi {
-            font-size: 24px;
+            font-size: clamp(20px, 4.5vw, 28px);
             font-weight: 700;
             color: #273c75;
             margin-bottom: 12px;
+            padding: 0 10px;
         }
 
         .word-pos {
-            font-size: 15px;
+            font-size: clamp(14px, 3vw, 15px);
             color: #4b6584;
             margin-bottom: 16px;
         }
 
         .word-ex {
-            font-size: 16px;
+            font-size: clamp(14px, 3.5vw, 18px);
             line-height: 1.7;
             color: #404c63;
             max-width: 640px;
+            padding: 0 10px;
         }
 
         .navigation {
@@ -274,6 +278,12 @@
             outline: none;
             font-size: 14px;
             color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #7a5cff;
+            box-shadow: 0 0 0 3px rgba(122, 92, 255, 0.2);
         }
 
         .search-box button {
@@ -507,24 +517,49 @@
 
         @media (max-width: 600px) {
             .flashcard-container {
-                height: 420px;
+                height: 65vh;
+                min-height: 400px;
             }
 
-            .controls-top,
-            .view-toggle,
+            .controls-top {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .view-toggle {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
             .navigation {
-                flex-direction: column;
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
             }
 
             .tool-btn,
             .toggle-btn,
+            .nav-btn {
+                width: 100%;
+                padding: 12px 8px;
+                font-size: 13px;
+                white-space: normal;
+                line-height: 1.2;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+
             .btn-group-action,
             .search-box button {
                 width: 100%;
             }
 
             .card-face {
-                padding: 24px;
+                padding: 20px 15px;
             }
             
             .password-box { padding: 30px 20px; }
@@ -667,8 +702,8 @@
                 }
             }
 
-            const difficultWords = getSafeArray('readingielts_difficult_words');
-            const learnedWords = getSafeArray('readingielts_learned_words');
+            let difficultWords = getSafeArray('readingielts_difficult_words');
+            let learnedWords = getSafeArray('readingielts_learned_words');
             const btnOpenGroupSelect = document.getElementById('btnOpenGroupSelect');
             const groupOverlay = document.getElementById('groupOverlay');
             const groupCheckboxList = document.getElementById('groupCheckboxList');

@@ -278,6 +278,12 @@
             outline: none;
             font-size: 14px;
             color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #7a5cff;
+            box-shadow: 0 0 0 3px rgba(122, 92, 255, 0.2);
         }
 
         .search-box button {
@@ -657,8 +663,8 @@
                 }
             }
 
-            const difficultWords = getSafeArray('speaking_difficult_words');
-            const learnedWords = getSafeArray('speaking_learned_words');
+            let difficultWords = getSafeArray('speaking_difficult_words');
+            let learnedWords = getSafeArray('speaking_learned_words');
             const groupSelect = document.getElementById('groupSelect');
             const flashcardContainer = document.getElementById('flashcardContainer');
             const flashcard = document.getElementById('flashcard');
