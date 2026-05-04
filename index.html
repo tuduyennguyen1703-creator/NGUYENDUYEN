@@ -5,19 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Học Từ Vựng - Nguyễn Duyên</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        input, button, select, textarea, a {
+            font-family: inherit;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fff0f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background: linear-gradient(135deg, #fff0f0 0%, #ffeaea 100%);
+            min-height: 100vh;
             padding: 5% 2%;
             margin: 0;
             color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         .container {
             width: 90%;
             max-width: 1000px;
             margin: 0 auto;
             background: white;
-            padding: 5%;
+            padding: clamp(20px, 5%, 40px);
             border-radius: 15px;
             box-sizing: border-box;
             box-shadow: 0 10px 25px rgba(231, 76, 60, 0.15);
@@ -30,14 +39,14 @@
         }
         .header h1 {
             color: #d32f2f;
-            font-size: 36px;
+            font-size: clamp(26px, 5vw, 38px);
             margin: 0 0 10px 0;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
         .header h2 {
             color: #e53935;
-            font-size: 24px;
+            font-size: clamp(16px, 3vw, 24px);
             margin: 0;
             font-weight: 600;
         }
@@ -54,9 +63,9 @@
             background-color: #f44336;
             color: white;
             text-decoration: none;
-            padding: 6% 5%;
+            padding: clamp(20px, 5vw, 30px);
             border-radius: 12px;
-            font-size: 18px;
+            font-size: clamp(16px, 2.5vw, 18px);
             font-weight: bold;
             text-align: center;
             box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
@@ -100,11 +109,8 @@
 
         /* Responsive cho thiết bị di động */
         @media (max-width: 600px) {
-            .header h1 { font-size: 28px; }
-            .header h2 { font-size: 20px; }
-            .card { font-size: 16px; padding: 20px 15px; }
-            .card.special { font-size: 18px; }
             .grid-container { grid-template-columns: 1fr; }
+            .container { width: 95%; padding: 20px 15px; }
         }
     </style>
 </head>
@@ -144,6 +150,11 @@
                 <span class="card-progress-text">Đã học: 0%</span>
                 <div class="card-progress-bar" style="width: 0%"></div>
             </a>
+            <a href="readingielts.html" class="card" id="card-readingielts">
+                <span class="card-title">📖 Mục 9: Reading IELTS</span>
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar" style="width: 0%"></div>
+            </a>
         </div>
     </div>
 
@@ -153,13 +164,16 @@
                 const card = document.getElementById(id);
                 if (!card) return;
                 
-                const totalStr = localStorage.getItem(prefix + '_total_words');
+                let totalStr = null;
+                try { totalStr = localStorage.getItem(prefix + '_total_words'); } catch(e) {}
                 const total = totalStr ? parseInt(totalStr) : 0;
                 
                 let learned = 0;
                 if (total > 0) {
-                    const learnedArray = JSON.parse(localStorage.getItem(prefix + '_learned_words')) || [];
-                    learned = learnedArray.length;
+                    try {
+                        const learnedArray = JSON.parse(localStorage.getItem(prefix + '_learned_words'));
+                        if (Array.isArray(learnedArray)) learned = learnedArray.length;
+                    } catch(e) {}
                 }
                 
                 let percent = 0;
@@ -179,6 +193,7 @@
             updateProgress('card-idiom', 'idiom');
             updateProgress('card-phrasalverb', 'phrasalverb');
             updateProgress('card-class9', 'class9');
+            updateProgress('card-readingielts', 'readingielts');
         });
     </script>
 </body>

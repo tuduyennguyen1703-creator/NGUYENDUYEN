@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chuyển đổi Từ vựng sang vocab.js</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        input, button, select {
+            font-family: inherit;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             max-width: 900px;
             margin: 20px auto;
             padding: 20px;
             background-color: #f9f9f9;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         h2 {
             color: #333;
@@ -117,7 +125,7 @@
         }
 
         // Tạo chuỗi code JavaScript
-        const jsString = "const vocabList = " + JSON.stringify(vocabArray, null, 4) + ";\n\n// Xuất biến để sử dụng ở file khác\nexport default vocabList;";
+        const jsString = "const vocabList = " + JSON.stringify(vocabArray, null, 4) + ";\n\n// Xuất biến để sử dụng ở file khác (Bỏ comment nếu dùng Module)\n// export default vocabList;";
         
         document.getElementById('outputText').value = jsString;
     }

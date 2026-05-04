@@ -1,4 +1,4 @@
-const vocabData = [
+const vocabData = window.vocabData = [
     {
         "num": 1,
         "en": "Major in [Subject]",

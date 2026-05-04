@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reading Flashcards</title>
+    <title>Reading IELTS Flashcards</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
@@ -19,6 +19,7 @@
             margin: 0;
             min-height: 100vh;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-weight: 300;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             background: linear-gradient(135deg, #f5f7fa 0%, #e8edf5 100%);
@@ -106,7 +107,7 @@
         .flashcard-container {
             width: 100%;
             max-width: 760px;
-            height: clamp(340px, 60vh, 480px);
+            height: 360px;
             perspective: 1200px;
             margin-bottom: 20px;
         }
@@ -158,41 +159,38 @@
         }
 
         .word-en {
-            font-size: clamp(24px, 5vw, 34px);
+            font-size: 28px;
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 14px;
             color: #2c3e50;
-            padding: 0 10px;
         }
 
         .word-ipa {
             color: #6c7a93;
-            font-size: clamp(14px, 3vw, 16px);
+            font-size: 16px;
             margin-bottom: 18px;
             font-style: italic;
         }
 
         .word-vi {
-            font-size: clamp(20px, 4.5vw, 28px);
+            font-size: 24px;
             font-weight: 700;
             color: #273c75;
             margin-bottom: 12px;
-            padding: 0 10px;
         }
 
         .word-pos {
-            font-size: clamp(14px, 3vw, 15px);
+            font-size: 15px;
             color: #4b6584;
             margin-bottom: 16px;
         }
 
         .word-ex {
-            font-size: clamp(14px, 3.5vw, 18px);
+            font-size: 16px;
             line-height: 1.7;
             color: #404c63;
             max-width: 640px;
-            padding: 0 10px;
         }
 
         .navigation {
@@ -300,7 +298,7 @@
             overflow-y: auto;
             max-height: 400px;
         }
-        
+
         .vocab-list::-webkit-scrollbar {
             width: 6px;
         }
@@ -509,49 +507,24 @@
 
         @media (max-width: 600px) {
             .flashcard-container {
-                height: 65vh;
-                min-height: 400px;
+                height: 420px;
             }
 
-            .controls-top {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            
-            .view-toggle {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
+            .controls-top,
+            .view-toggle,
             .navigation {
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
+                flex-direction: column;
             }
 
             .tool-btn,
             .toggle-btn,
-            .nav-btn {
-                width: 100%;
-                padding: 12px 8px;
-                font-size: 13px;
-                white-space: normal;
-                line-height: 1.2;
-            }
-            
-            .search-box {
-                flex-direction: column;
-            }
-
             .btn-group-action,
             .search-box button {
                 width: 100%;
             }
 
             .card-face {
-                padding: 20px 15px;
+                padding: 24px;
             }
             
             .password-box { padding: 30px 20px; }
@@ -565,7 +538,7 @@
     <div id="passwordOverlay">
         <div class="password-box">
             <h2>Nhập mật khẩu</h2>
-            <p>Vui lòng nhập mật khẩu để học mục <strong>Reading</strong>.</p>
+            <p>Vui lòng nhập mật khẩu để học mục <strong>Reading IELTS</strong>.</p>
             <input type="password" id="passwordInput" placeholder="Mật khẩu...">
             <p id="passwordError">Mật khẩu không đúng, vui lòng thử lại!</p>
             <div class="password-btn-group">
@@ -577,14 +550,13 @@
 
     <div class="header-container">
         <a href="index.html" class="back-btn">⬅ Quay lại</a>
-        <h1>Reading Flashcards</h1>
+        <h1>Reading IELTS Flashcards</h1>
     </div>
 
     <div class="controls-top">
         <button id="btnOpenGroupSelect" class="tool-btn">📚 Chọn nhóm</button>
         <button id="btnReview" class="tool-btn">⭐ Cần ôn</button>
         <button id="btnShuffle" class="tool-btn">🔀 Đảo thứ tự</button>
-        <button id="btnSpeak" class="tool-btn">🔊 Phát âm</button>
     </div>
 
     <div class="view-toggle">
@@ -596,10 +568,10 @@
         <div class="flashcard" id="flashcard">
             <div class="card-face card-front">
                 <div class="word-en" id="wordEn">Đang tải dữ liệu...</div>
-                <div class="word-ipa" id="wordIpa"></div>
                 <div class="word-pos" id="wordPos"></div>
             </div>
             <div class="card-face card-back">
+                <div class="word-ipa" id="wordIpa"></div>
                 <div class="word-vi" id="wordVi"></div>
                 <div class="word-ex" id="wordEx"></div>
             </div>
@@ -608,11 +580,11 @@
 
     <div id="vocabListContainer">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm từ hoặc nghĩa...">
+            <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm từ vựng hoặc nghĩa...">
             <button id="btnSearch">Tìm</button>
         </div>
         <div class="vocab-list" id="vocabListDiv"></div>
-        <div class="vocab-count" id="vocabCount">Tổng: 0 từ</div>
+        <div class="vocab-count" id="vocabCount">Tổng: 0 từ vựng</div>
     </div>
 
     <div class="navigation">
@@ -633,23 +605,23 @@
         </div>
     </div>
 
-    <script src="./vocabreadingdata.js?v=3" charset="UTF-8"></script>
+    <script src="./readingielts.js?v=3" charset="UTF-8"></script>
     <script>
         window.addEventListener('load', () => {
             // --- CẤU HÌNH MẬT KHẨU ---
-            const SECTION_PASSWORD = "nguyenduyenreading";
+            const SECTION_PASSWORD = "170399";
             const overlay = document.getElementById('passwordOverlay');
             const pwInput = document.getElementById('passwordInput');
             const pwSubmit = document.getElementById('btnSubmitPassword');
             const pwError = document.getElementById('passwordError');
 
-            if (sessionStorage.getItem('unlocked_reading') === 'true') {
+            if (sessionStorage.getItem('unlocked_readingielts') === 'true') {
                 if (overlay) overlay.style.display = 'none';
             }
 
             function checkPassword() {
                 if (pwInput.value === SECTION_PASSWORD) {
-                    try { sessionStorage.setItem('unlocked_reading', 'true'); } catch(e) {}
+                    try { sessionStorage.setItem('unlocked_readingielts', 'true'); } catch(e) {}
                     if (overlay) overlay.style.display = 'none';
                 } else {
                     if (pwError) pwError.style.display = 'block';
@@ -695,8 +667,8 @@
                 }
             }
 
-            const difficultWords = getSafeArray('reading_difficult_words');
-            const learnedWords = getSafeArray('reading_learned_words');
+            const difficultWords = getSafeArray('readingielts_difficult_words');
+            const learnedWords = getSafeArray('readingielts_learned_words');
             const btnOpenGroupSelect = document.getElementById('btnOpenGroupSelect');
             const groupOverlay = document.getElementById('groupOverlay');
             const groupCheckboxList = document.getElementById('groupCheckboxList');
@@ -713,7 +685,6 @@
             const btnNotLearned = document.getElementById('btnNotLearned');
             const btnShuffle = document.getElementById('btnShuffle');
             const btnReview = document.getElementById('btnReview');
-            const btnSpeak = document.getElementById('btnSpeak');
             const btnFlashcardView = document.getElementById('btnFlashcardView');
             const btnListView = document.getElementById('btnListView');
             const vocabListContainer = document.getElementById('vocabListContainer');
@@ -749,8 +720,8 @@
             initApp();
 
             function initApp() {
-                setSafeItem('reading_total_words', safeVocabData.length);
-                let savedGroups = getSafeArray('reading_selected_groups', ['0']);
+                setSafeItem('readingielts_total_words', safeVocabData.length);
+                let savedGroups = getSafeArray('readingielts_selected_groups', ['0']);
                 if (!savedGroups.length) savedGroups = ['0'];
 
                 function switchView(view) {
@@ -790,7 +761,7 @@
                         return;
                     }
                     savedGroups = selected;
-                    setSafeItem('reading_selected_groups', JSON.stringify(savedGroups));
+                    setSafeItem('readingielts_selected_groups', JSON.stringify(savedGroups));
                     groupOverlay.classList.remove('show');
                     loadGroups(savedGroups);
                 });
@@ -798,11 +769,10 @@
                 btnShuffle.addEventListener('click', shuffleCurrentGroup);
                 btnReview.addEventListener('click', () => {
                     const reviewGroup = ['difficult'];
-                    setSafeItem('reading_selected_groups', JSON.stringify(reviewGroup));
+                    setSafeItem('readingielts_selected_groups', JSON.stringify(reviewGroup));
                     loadGroups(reviewGroup);
                 });
 
-                btnSpeak.addEventListener('click', speakCurrentWord);
                 flashcard.addEventListener('click', () => flashcard.classList.toggle('is-flipped'));
                 btnSearch.addEventListener('click', () => searchVocab(searchInput.value));
                 searchInput.addEventListener('input', (event) => searchVocab(event.target.value));
@@ -819,215 +789,258 @@
 
                 const difficultOption = document.createElement('label');
                 difficultOption.className = 'checkbox-item';
-                difficultOption.innerHTML = `<input type="checkbox" value="difficult" ${selectedGroups.includes('difficult') ? 'checked' : ''}> <strong>Nhóm cần ôn tập (${difficultWords.length})</strong>`;
+                difficultOption.innerHTML = `
+                    <input type="checkbox" value="difficult">
+                    <span>⭐ Từ khó (cần ôn tập)</span>
+                `;
+                const difficultCheckbox = difficultOption.querySelector('input');
+                difficultCheckbox.checked = selectedGroups.includes('difficult');
                 groupCheckboxList.appendChild(difficultOption);
 
-                for (let i = 0; i < totalGroups; i += 1) {
+                for (let i = 0; i < totalGroups; i++) {
+                    const label = document.createElement('label');
+                    label.className = 'checkbox-item';
                     const start = i * wordsPerGroup + 1;
                     const end = Math.min((i + 1) * wordsPerGroup, safeVocabData.length);
-                    const item = document.createElement('label');
-                    item.className = 'checkbox-item';
-                    item.innerHTML = `<input type="checkbox" value="${i}" ${selectedGroups.includes(String(i)) ? 'checked' : ''}> Nhóm ${i + 1} (Từ ${start} - ${end})`;
-                    groupCheckboxList.appendChild(item);
-                }
-            }
-
-            function renderVocabList(words) {
-                vocabListEl.innerHTML = '';
-                words.forEach((word) => {
-                    const item = document.createElement('div');
-                    item.className = 'vocab-item';
-                    const isLearned = learnedWords.includes(word.num);
-                    const isDifficult = difficultWords.includes(word.num);
-
-                    item.innerHTML = `
-                        <div class="vocab-item-content">
-                            <div class="vocab-item-word">${word.num}. ${word.en}</div>
-                            <div class="vocab-item-meaning">${word.vi}</div>
-                            <div class="vocab-item-type">${word.pos || ''}</div>
-                        </div>
-                        <div class="status-badge ${isLearned ? 'status-learned' : isDifficult ? 'status-notlearned' : 'status-notstatus'}">
-                            ${isLearned ? '✓' : isDifficult ? '✗' : '•'}
-                        </div>
+                    label.innerHTML = `
+                        <input type="checkbox" value="${i}">
+                        <span>Nhóm ${i + 1}: ${start}-${end}</span>
                     `;
+                    const checkbox = label.querySelector('input');
+                    checkbox.checked = selectedGroups.includes(i.toString());
+                    groupCheckboxList.appendChild(label);
+                }
+            }
 
-                    item.addEventListener('click', () => {
-                        if (!currentGroup.length) {
-                            currentGroup = safeVocabData.slice();
-                        }
-                        const index = currentGroup.findIndex((entry) => entry.num === word.num);
-                        currentIndex = index >= 0 ? index : 0;
-                        updateCard();
-                        currentView = 'flashcard';
-                        vocabListContainer.classList.remove('show');
-                        flashcardContainer.style.display = 'block';
-                        if (navigationBar) navigationBar.style.display = 'flex';
-                        btnFlashcardView.classList.add('active');
-                        btnListView.classList.remove('active');
-                    });
-
-                    vocabListEl.appendChild(item);
+            function loadGroups(groupIds) {
+                currentGroup = [];
+                groupIds.forEach(groupId => {
+                    if (groupId === 'difficult') {
+                        currentGroup.push(...difficultWords.map(id => safeVocabData.find(item => item.num === id)).filter(Boolean));
+                    } else {
+                        const groupIndex = parseInt(groupId);
+                        const start = groupIndex * wordsPerGroup;
+                        const end = Math.min(start + wordsPerGroup, safeVocabData.length);
+                        currentGroup.push(...safeVocabData.slice(start, end));
+                    }
                 });
-                vocabCount.innerText = `Tổng: ${words.length} từ`;
-            }
 
-            function searchVocab(query) {
-                const normalized = (query || '').trim().toLowerCase();
-                if (!normalized) {
-                    renderVocabList(safeVocabData);
-                    return;
+                if (!currentGroup.length) {
+                    currentGroup = safeVocabData.slice(0, wordsPerGroup);
                 }
 
-                const filtered = safeVocabData.filter((word) =>
-                    word.en.toLowerCase().includes(normalized) ||
-                    word.vi.toLowerCase().includes(normalized) ||
-                    (word.ex || '').toLowerCase().includes(normalized)
-                );
-                renderVocabList(filtered);
-            }
-
-            function speakCurrentWord() {
-                if (!currentGroup.length) return;
-                const word = currentGroup[currentIndex];
-                if (!word || !word.en) return;
-
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(word.en);
-                    utterance.lang = 'en-US';
-                    window.speechSynthesis.speak(utterance);
-                } else {
-                    alert('Trình duyệt của bạn không hỗ trợ chức năng phát âm tự động.');
-                }
+                currentIndex = 0;
+                updateDisplay();
+                updateProgress();
             }
 
             function shuffleCurrentGroup() {
-                if (!currentGroup.length) return;
-                for (let i = currentGroup.length - 1; i > 0; i -= 1) {
+                for (let i = currentGroup.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [currentGroup[i], currentGroup[j]] = [currentGroup[j], currentGroup[i]];
                 }
                 currentIndex = 0;
-                updateCard();
-                updateListView();
+                updateDisplay();
             }
 
-            function handleWord(learned) {
+            function updateDisplay() {
                 if (!currentGroup.length) return;
-                const word = currentGroup[currentIndex];
-                if (!word) return;
 
-                if (learned) {
-                    if (difficultWords.includes(word.num)) {
-                        const idx = difficultWords.indexOf(word.num);
-                        if (idx !== -1) difficultWords.splice(idx, 1);
-                    }
-                    if (!learnedWords.includes(word.num)) {
-                        learnedWords.push(word.num);
-                    }
-                } else {
-                    if (!difficultWords.includes(word.num)) {
-                        difficultWords.push(word.num);
-                    }
-                    const learnedIndex = learnedWords.indexOf(word.num);
-                    if (learnedIndex !== -1) learnedWords.splice(learnedIndex, 1);
-                }
+                const item = currentGroup[currentIndex];
+                wordEn.textContent = item.en;
+                wordVi.textContent = item.vi;
+                wordIpa.textContent = item.ipa;
+                wordPos.textContent = item.pos;
+                wordEx.textContent = item.ex;
 
-                setSafeItem('reading_difficult_words', JSON.stringify(difficultWords));
-                setSafeItem('reading_learned_words', JSON.stringify(learnedWords));
-                updateListView();
-
-                if (currentIndex < currentGroup.length - 1) {
-                    currentIndex += 1;
-                    updateCard();
-                } else {
-                    alert('Bạn đã hoàn thành danh sách này.');
-                }
+                flashcard.classList.remove('is-flipped');
+                updateNavigationButtons();
             }
 
-            btnLearned.addEventListener('click', () => handleWord(true));
-            btnNotLearned.addEventListener('click', () => handleWord(false));
+            function updateNavigationButtons() {
+                const currentItem = currentGroup[currentIndex];
+                if (!currentItem) return;
 
-            function loadGroups(groupValues) {
-                currentGroup = [];
-                let hasDifficult = false;
-
-                groupValues.forEach((value) => {
-                    if (value === 'difficult') {
-                        const difficultSet = safeVocabData.filter((word) => difficultWords.includes(word.num));
-                        currentGroup = currentGroup.concat(difficultSet);
-                        hasDifficult = true;
-                    } else {
-                        const offset = parseInt(value, 10);
-                        if (!Number.isNaN(offset)) {
-                            currentGroup = currentGroup.concat(safeVocabData.slice(offset * wordsPerGroup, offset * wordsPerGroup + wordsPerGroup));
-                        }
-                    }
-                });
-
-                currentGroup = currentGroup.filter((item, index, self) => self.findIndex((entry) => entry.num === item.num) === index);
-
-                if (!currentGroup.length) {
-                    const message = hasDifficult ? 'Tuyệt vời! Không còn từ cần ôn tập.' : 'Danh sách này không có từ nào. Vui lòng chọn nhóm khác.';
-                    showEmptyState(message);
-                    return;
-                }
+                const isLearned = learnedWords.includes(currentItem.num);
+                const isDifficult = difficultWords.includes(currentItem.num);
 
                 btnLearned.disabled = false;
                 btnNotLearned.disabled = false;
-                btnShuffle.style.display = 'inline-flex';
-                searchInput.value = '';
 
-                const savedId = getSafeItem('reading_current_word_id');
-                if (savedId) {
-                    const savedIndex = currentGroup.findIndex((word) => String(word.num) === savedId);
-                    currentIndex = savedIndex >= 0 ? savedIndex : 0;
-                } else {
-                    currentIndex = 0;
+                btnLearned.textContent = isLearned ? 'Đã thuộc ✓' : 'Đã thuộc';
+                btnNotLearned.textContent = isDifficult ? 'Chưa thuộc ✗' : 'Chưa thuộc';
+            }
+
+            function updateProgress() {
+                progressText.textContent = `${currentIndex + 1} / ${currentGroup.length}`;
+            }
+
+            function nextWord() {
+                if (currentIndex < currentGroup.length - 1) {
+                    currentIndex++;
+                    updateDisplay();
+                    updateProgress();
                 }
-
-                updateListView();
-                updateCard();
             }
 
-            function updateCard() {
-                if (!currentGroup.length) return;
-                flashcard.classList.remove('is-flipped');
-                const word = currentGroup[currentIndex];
-                if (!word) return;
-
-                wordEn.innerText = word.en || '';
-                wordIpa.innerText = word.ipa || '';
-                wordPos.innerText = word.pos || '';
-                wordVi.innerText = word.vi || '';
-                wordEx.innerText = word.ex || '';
-                progressText.innerText = `Từ ${currentIndex + 1} / ${currentGroup.length}`;
-                setSafeItem('reading_current_word_id', String(word.num));
+            function prevWord() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateDisplay();
+                    updateProgress();
+                }
             }
+
+            btnLearned.addEventListener('click', () => {
+                const currentItem = currentGroup[currentIndex];
+                if (!learnedWords.includes(currentItem.num)) {
+                    learnedWords.push(currentItem.num);
+                    setSafeItem('readingielts_learned_words', JSON.stringify(learnedWords));
+                }
+                if (difficultWords.includes(currentItem.num)) {
+                    const index = difficultWords.indexOf(currentItem.num);
+                    difficultWords.splice(index, 1);
+                    setSafeItem('readingielts_difficult_words', JSON.stringify(difficultWords));
+                }
+                updateNavigationButtons();
+                nextWord();
+            });
+
+            btnNotLearned.addEventListener('click', () => {
+                const currentItem = currentGroup[currentIndex];
+                if (learnedWords.includes(currentItem.num)) {
+                    const index = learnedWords.indexOf(currentItem.num);
+                    learnedWords.splice(index, 1);
+                    setSafeItem('readingielts_learned_words', JSON.stringify(learnedWords));
+                }
+                if (!difficultWords.includes(currentItem.num)) {
+                    difficultWords.push(currentItem.num);
+                    setSafeItem('readingielts_difficult_words', JSON.stringify(difficultWords));
+                }
+                updateNavigationButtons();
+                nextWord();
+            });
 
             function updateListView() {
-                if (currentView !== 'list') return;
-                if (searchInput.value.trim()) {
-                    searchVocab(searchInput.value);
-                } else {
-                    renderVocabList(safeVocabData);
-                }
+                vocabListEl.innerHTML = '';
+                const filteredData = currentGroup.length ? currentGroup : safeVocabData;
+
+                filteredData.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'vocab-item';
+                    itemDiv.onclick = () => {
+                        currentIndex = currentGroup.indexOf(item);
+                        switchView('flashcard');
+                        updateDisplay();
+                        updateProgress();
+                    };
+
+                    const isLearned = learnedWords.includes(item.num);
+                    const isDifficult = difficultWords.includes(item.num);
+                    let statusClass = 'status-notstatus';
+                    let statusText = '○';
+                    if (isLearned) {
+                        statusClass = 'status-learned';
+                        statusText = '✓';
+                    } else if (isDifficult) {
+                        statusClass = 'status-notlearned';
+                        statusText = '✗';
+                    }
+
+                    itemDiv.innerHTML = `
+                        <div class="vocab-item-content">
+                            <div class="vocab-item-word">${item.en}</div>
+                            <div class="vocab-item-meaning">${item.vi}</div>
+                            <div class="vocab-item-type">${item.pos}</div>
+                        </div>
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                    `;
+                    vocabListEl.appendChild(itemDiv);
+                });
+
+                vocabCount.textContent = `Tổng: ${filteredData.length} từ vựng`;
             }
 
-            function showEmptyState(message) {
-                wordEn.innerHTML = `<span style="font-size:20px; line-height:1.4;">${message}</span>`;
-                wordIpa.innerText = '';
-                wordPos.innerText = '';
-                wordVi.innerText = '';
-                wordEx.innerText = '';
-                progressText.innerText = '0 / 0';
-                btnLearned.disabled = true;
-                btnNotLearned.disabled = true;
-                btnShuffle.style.display = 'none';
+            function searchVocab(query) {
+                if (!query.trim()) {
+                    updateListView();
+                    return;
+                }
+
+                const filtered = safeVocabData.filter(item =>
+                    item.en.toLowerCase().includes(query.toLowerCase()) ||
+                    item.vi.toLowerCase().includes(query.toLowerCase()) ||
+                    item.ex.toLowerCase().includes(query.toLowerCase())
+                );
+
                 vocabListEl.innerHTML = '';
-                vocabCount.innerText = 'Tổng: 0 từ';
-                searchInput.value = '';
+                filtered.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'vocab-item';
+                    itemDiv.onclick = () => {
+                        currentIndex = safeVocabData.indexOf(item);
+                        currentGroup = [item];
+                        switchView('flashcard');
+                        updateDisplay();
+                        updateProgress();
+                    };
+
+                    const isLearned = learnedWords.includes(item.num);
+                    const isDifficult = difficultWords.includes(item.num);
+                    let statusClass = 'status-notstatus';
+                    let statusText = '○';
+                    if (isLearned) {
+                        statusClass = 'status-learned';
+                        statusText = '✓';
+                    } else if (isDifficult) {
+                        statusClass = 'status-notlearned';
+                        statusText = '✗';
+                    }
+
+                    itemDiv.innerHTML = `
+                        <div class="vocab-item-content">
+                            <div class="vocab-item-word">${item.en}</div>
+                            <div class="vocab-item-meaning">${item.vi}</div>
+                            <div class="vocab-item-type">${item.pos}</div>
+                        </div>
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                    `;
+                    vocabListEl.appendChild(itemDiv);
+                });
+
+                vocabCount.textContent = `Tìm thấy: ${filtered.length} từ vựng`;
             }
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (event) => {
+                if (currentView !== 'flashcard') return;
+                if (event.target.tagName === 'INPUT') return;
+
+                switch (event.key) {
+                    case 'ArrowRight':
+                    case ' ':
+                        event.preventDefault();
+                        nextWord();
+                        break;
+                    case 'ArrowLeft':
+                        event.preventDefault();
+                        prevWord();
+                        break;
+                    case '1':
+                        event.preventDefault();
+                        btnLearned.click();
+                        break;
+                    case '2':
+                        event.preventDefault();
+                        btnNotLearned.click();
+                        break;
+                    case 'f':
+                    case 'F':
+                        event.preventDefault();
+                        flashcard.classList.toggle('is-flipped');
+                       break;
+                }
+            });
         });
     </script>
 </body>
