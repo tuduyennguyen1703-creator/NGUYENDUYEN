@@ -184,6 +184,7 @@
         .card:nth-child(7) { animation-delay: 0.7s; }
         .card:nth-child(8) { animation-delay: 0.8s; }
         .card:nth-child(9) { animation-delay: 0.9s; }
+        .card:nth-child(10) { animation-delay: 1.0s; }
 
         .card-title {
             z-index: 2;
@@ -208,6 +209,61 @@
             background-color: var(--color-success);
             transition: width 0.5s ease;
             z-index: 1;
+        }
+
+        /* Modal Course */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--bg-container);
+            padding: 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px var(--color-shadow);
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: var(--color-primary);
+            font-size: 22px;
+        }
+        .course-btn {
+            display: block;
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--color-card-bg);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+        .course-btn:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-2px);
+        }
+        .close-modal-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            border: none;
+            background: #95a5a6;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+        .close-modal-btn:hover {
+            background: #7f8c8d;
         }
 
         .footer {
@@ -276,10 +332,25 @@
                 <span class="card-progress-text">Đã học: 0%</span>
                 <div class="card-progress-bar"></div>
             </a>
+            <a href="javascript:void(0);" class="card" id="card-course" onclick="document.getElementById('courseModal').style.display='flex'">
+                <span class="card-title">🎓 Mục 10: Course</span>
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar"></div>
+            </a>
         </div>
         
         <div class="footer">
             &copy; 2024 NGUYEN DUYEN. All rights reserved.<br>Thiết kế dành riêng cho việc học ngoại ngữ.
+        </div>
+    </div>
+
+    <!-- Modal Course -->
+    <div class="modal-overlay" id="courseModal" onclick="if(event.target === this) this.style.display='none'">
+        <div class="modal-content">
+            <h3>Chọn Khóa Học</h3>
+            <a href="./thaovocab.html" class="course-btn">📖 Thảo Vocab</a>
+            <a href="./course_tramlinhvocab.html" class="course-btn">📖 Tramlinh Vocab</a>
+            <button class="close-modal-btn" onclick="document.getElementById('courseModal').style.display='none'">Đóng</button>
         </div>
     </div>
 
@@ -290,7 +361,8 @@
             { id: 'card-idiom', prefix: 'idiom' },
             { id: 'card-phrasalverb', prefix: 'phrasalverb' },
             { id: 'card-class9', prefix: 'class9' },
-            { id: 'card-readingielts', prefix: 'readingielts' }
+            { id: 'card-readingielts', prefix: 'readingielts' },
+            { id: 'card-course', prefix: 'thaovocab' }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
