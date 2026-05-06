@@ -399,6 +399,26 @@
                 document.body.classList.add('dark-mode');
             }
 
+            function getSafeNumber(key) {
+                const raw = localStorage.getItem(key);
+                if (raw === null || raw === undefined || raw === '') {
+                    return 0;
+                }
+                const value = Number(raw);
+                return Number.isFinite(value) ? value : 0;
+            }
+
+            function getSafeArray(key) {
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (!raw) return [];
+                    const parsed = JSON.parse(raw);
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch (error) {
+                    return [];
+                }
+            }
+
             let totalWordsSystem = 0;
             let totalLearnedSystem = 0;
 
@@ -411,9 +431,9 @@
                 const currentPrefixes = prefixes || (prefix ? [prefix] : []);
 
                 currentPrefixes.forEach(p => {
-                    const total = parseInt(localStorage.getItem(p + '_total_words')) || 0;
-                    const learnedArray = JSON.parse(localStorage.getItem(p + '_learned_words') || '[]');
-                    const learned = Array.isArray(learnedArray) ? learnedArray.length : 0;
+                    const total = getSafeNumber(p + '_total_words');
+                    const learnedArray = getSafeArray(p + '_learned_words');
+                    const learned = learnedArray.length;
 
                     totalCardWords += total;
                     learnedCardWords += learned;
