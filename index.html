@@ -332,8 +332,8 @@
                 <span class="card-progress-text">Đã học: 0%</span>
                 <div class="card-progress-bar"></div>
             </a>
-            <a href="javascript:void(0);" class="card" id="card-course" onclick="document.getElementById('courseModal').style.display='flex'">
-                <span class="card-title">🎓 Mục 10: Course</span>
+            <a href="#" class="card" id="card-combined-course" onclick="showCourseModal(event)">
+                <span class="card-title">🎓 Mục 10: COURSE</span>
                 <span class="card-progress-text">Đã học: 0%</span>
                 <div class="card-progress-bar"></div>
             </a>
@@ -348,21 +348,39 @@
     <div class="modal-overlay" id="courseModal" onclick="if(event.target === this) this.style.display='none'">
         <div class="modal-content">
             <h3>Chọn Khóa Học</h3>
-            <a href="./course_thaovocab.html" class="course-btn">📖 Thảo Vocab</a>
-            <a href="./course_tramlinhvocab.html" class="course-btn">📖 Tramlinh Vocab</a>
-            <button class="close-modal-btn" onclick="document.getElementById('courseModal').style.display='none'">Đóng</button>
+            <a href="./course_thaovocab.html" class="course-btn" id="card-thaovocab">
+                📖 THAO Vocab
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar"></div>
+            </a>
+            <a href="./course_tramlinh.html" class="course-btn" id="card-tramlinh">
+                📖 TRAMLINH Vocab
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar"></div>
+            </a>
+            <br><br>
+            <button class="close-modal-btn"
+                onclick="document.getElementById('courseModal').style.display='none'">Đóng</button>
         </div>
     </div>
 
     <script>
+        function showCourseModal(event) {
+            event.preventDefault(); // Prevent default link behavior
+            document.getElementById('courseModal').style.display = 'flex';
+        }
+
         const PROGRESS_DATA = [
             { id: 'card-reading', prefix: 'reading' },
             { id: 'card-speaking', prefix: 'speaking' },
             { id: 'card-idiom', prefix: 'idiom' },
             { id: 'card-phrasalverb', prefix: 'phrasalverb' },
             { id: 'card-class9', prefix: 'class9' },
-            { id: 'card-readingielts', prefix: 'readingielts' },
-            { id: 'card-course', prefix: 'course_thaovocab' }
+            { id: 'card-readingielts', prefix: 'readingielts' }, // Mục 9
+            { id: 'card-thaovocab', prefix: 'thaovocab', isUiOnly: true },
+            { id: 'card-tramlinh', prefix: 'tramlinh', isUiOnly: true },
+            // Mục gộp tính toán
+            { id: 'card-combined-course', prefixes: ['thaovocab', 'tramlinh'] },
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -384,26 +402,29 @@
             let totalWordsSystem = 0;
             let totalLearnedSystem = 0;
 
-            PROGRESS_DATA.forEach(({ id, prefix }) => {
+            PROGRESS_DATA.forEach(({ id, prefix, prefixes, isUiOnly }) => {
                 const card = document.getElementById(id);
                 if (!card) return;
 
-                const total = parseInt(localStorage.getItem(prefix + '_total_words')) || 0;
-                let learned = 0;
+                let totalCardWords = 0;
+                let learnedCardWords = 0;
+                const currentPrefixes = prefixes || (prefix ? [prefix] : []);
 
-                if (total > 0) {
-                    try {
-                        const learnedArray = JSON.parse(localStorage.getItem(prefix + '_learned_words'));
-                        learned = Array.isArray(learnedArray) ? learnedArray.length : 0;
-                    } catch (e) {
-                        learned = 0;
-                    }
+                currentPrefixes.forEach(p => {
+                    const total = parseInt(localStorage.getItem(p + '_total_words')) || 0;
+                    const learnedArray = JSON.parse(localStorage.getItem(p + '_learned_words') || '[]');
+                    const learned = Array.isArray(learnedArray) ? learnedArray.length : 0;
+
+                    totalCardWords += total;
+                    learnedCardWords += learned;
+                });
+
+                if (!isUiOnly) {
+                    totalWordsSystem += totalCardWords;
+                    totalLearnedSystem += learnedCardWords;
                 }
 
-                totalWordsSystem += total;
-                totalLearnedSystem += learned;
-
-                const percent = total > 0 ? Math.round((learned / total) * 100) : 0;
+                const percent = totalCardWords > 0 ? Math.round((learnedCardWords / totalCardWords) * 100) : 0;
 
                 const textEl = card.querySelector('.card-progress-text');
                 const barEl = card.querySelector('.card-progress-bar');
@@ -411,11 +432,11 @@
                 if (textEl) textEl.textContent = `Đã học: ${percent}%`;
                 if (barEl) barEl.style.width = `${percent}%`;
             });
-            
+
             const overallStatsEl = document.getElementById('overallStats');
             if (overallStatsEl) {
                 const overallPercent = totalWordsSystem > 0 ? Math.round((totalLearnedSystem / totalWordsSystem) * 100) : 0;
-                overallStatsEl.innerHTML = `🔥 Tổng tiến độ toàn hệ thống: <strong>${totalLearnedSystem} / ${totalWordsSystem}</strong> từ vựng (${overallPercent}%)`;
+                overallStatsEl.innerHTML = `🔥 Tổng tiến độ: <strong>${totalLearnedSystem} / ${totalWordsSystem}</strong> từ vựng (${overallPercent}%)`;
             }
         });
 

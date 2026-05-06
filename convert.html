@@ -3,151 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chuyển đổi Từ vựng sang vocab.js</title>
+    <title>Chuyển đổi Bảng Từ Vựng Word sang JavaScript</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-        input, button, select {
-            font-family: inherit;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-family: Arial, sans-serif;
             max-width: 900px;
             margin: 20px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            padding: 0 20px;
+            background-color: #f4f7f6;
         }
         h2 {
-            color: #333;
+            color: #2c3e50;
         }
         .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         textarea {
             width: 100%;
-            height: 180px;
-            margin-bottom: 15px;
-            padding: 10px;
-            font-family: 'Courier New', Courier, monospace;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
             resize: vertical;
-        }
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            box-sizing: border-box;
         }
         button {
-            padding: 10px 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 12px 24px;
             font-size: 16px;
             font-weight: bold;
-            transition: background-color 0.2s;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #357ae8;
+            background-color: #2ecc71;
         }
-        .btn-copy {
-            background-color: #34a853;
+        .instruction {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-left: 6px solid #3498db;
+            border-radius: 4px;
+            line-height: 1.6;
         }
-        .btn-copy:hover {
-            background-color: #2b8c46;
-        }
-        .note {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
+        code {
+            background-color: #dfe6e9;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>1. Nhập dữ liệu từ vựng</h2>
-    <p class="note"><b>Lưu ý:</b> Hãy copy trực tiếp từ Excel hoặc Google Sheets (các cột tự động cách nhau bằng dấu Tab).<br>
-    <i>Thứ tự cột: ID | Từ vựng | Loại từ | Phiên âm | Ý nghĩa | Ví dụ</i></p>
-    <textarea id="inputText" placeholder="Dán dữ liệu vào đây...&#10;Ví dụ:&#10;1&#9;Over the moon&#9;idiom&#9;/ˌəʊ.və ðə ˈmuːn/&#9;Cực kỳ vui sướng...&#9;She was over the moon..."></textarea>
+    <h2>Công Cụ Chuyển Đổi Bảng Từ Vựng (Tab-separated)</h2>
     
-    <div class="controls">
-        <button onclick="convertToJS()">Chuyển đổi ➔</button>
-        <button class="btn-copy" onclick="copyResult()">📋 Copy Code JS</button>
+    <div class="instruction">
+        <p><strong>Hướng dẫn:</strong> Copy các hàng từ bảng từ vựng trong Word/Excel và dán vào ô bên dưới. Hệ thống sẽ tự động nhận diện khoảng trắng Tab để tách thành các thuộc tính.</p>
+        <p><i>Định dạng chuẩn (5 cột):</i><br>
+        <code>[ID] [Từ vựng] [Loại từ] [Phiên âm] [Nghĩa]</code></p>
     </div>
 
-    <h2>2. Kết quả (Code cho vocab.js)</h2>
-    <textarea id="outputText" readonly placeholder="Code JavaScript sẽ hiện ở đây..."></textarea>
-</div>
+    <div class="container">
+        <label for="wordInput"><strong>1. Dán dữ liệu bảng từ Word vào đây:</strong></label>
+        <textarea id="wordInput" rows="6" placeholder="726	interrupt	v.	/ˌɪn.təˈrʌpt/	Làm gián đoạn, làm phiền"></textarea>
 
-<script>
-    function convertToJS() {
-        const input = document.getElementById('inputText').value;
-        const lines = input.trim().split('\n');
-        const vocabArray = [];
+        <button onclick="convertToJS()">Chuyển đổi sang JS</button>
 
-        for (let line of lines) {
-            // Bỏ qua các dòng trống
-            if (!line.trim()) continue; 
+        <label for="jsOutput"><strong>2. Kết quả mã JavaScript:</strong></label>
+        <textarea id="jsOutput" rows="15" readonly placeholder="Mảng JavaScript sẽ hiện ra ở đây..."></textarea>
+    </div>
+
+    <script>
+        function convertToJS() {
+            const inputText = document.getElementById('wordInput').value;
+            // Tách các dòng và loại bỏ dòng trống
+            const lines = inputText.split('\n').filter(line => line.trim() !== '');
+            const vocabularyArray = [];
+
+            lines.forEach(line => {
+                // Khi copy từ Word table, các cột được ngăn cách bằng dấu Tab (\t)
+                const parts = line.split('\t');
+
+                // Nếu dòng có đủ 5 cột dữ liệu
+                if (parts.length >= 5) {
+                    vocabularyArray.push({
+                        id: parts[0].trim(),
+                        // Giữ nguyên từ vựng, ưu tiên dùng dạng động từ nguyên thể (base form) khi dán vào
+                        word: parts[1].trim(), 
+                        pos: parts[2].trim(),
+                        ipa: parts[3].trim(),
+                        meaning: parts[4].trim()
+                    });
+                } 
+                // Xử lý linh hoạt nếu dòng chỉ có 2-4 cột (bỏ qua ID hoặc IPA, v.v.)
+                else if (parts.length > 1) {
+                    vocabularyArray.push({
+                        word: parts[1] ? parts[1].trim() : parts[0].trim(),
+                        meaning: parts[parts.length - 1].trim()
+                    });
+                }
+            });
+
+            // Định dạng thành chuỗi JSON đẹp mắt
+            const jsCode = `const vocabularyList = ${JSON.stringify(vocabularyArray, null, 4)};`;
             
-            // Tách dữ liệu bằng dấu Tab (\t) hoặc khoảng trắng lớn nếu copy từ text thường
-            let cols = line.split(/\t/);
-            if (cols.length < 6) {
-                // Fallback: Nếu không có dấu tab, thử tách bằng cụm nhiều khoảng trắng (nếu copy từ PDF/Word)
-                cols = line.split(/ {2,}/);
-            }
-
-            // Đảm bảo dòng có đủ 6 cột dữ liệu cơ bản
-            if (cols.length >= 6) {
-                vocabArray.push({
-                    id: isNaN(cols[0]) ? cols[0].trim() : Number(cols[0].trim()),
-                    word: cols[1].trim(),
-                    type: cols[2].trim(),
-                    pronunciation: cols[3].trim(),
-                    meaning: cols[4].trim(),
-                    example: cols[5].trim()
-                });
-            }
+            document.getElementById('jsOutput').value = jsCode;
         }
-
-        if (vocabArray.length === 0) {
-            alert("Không tìm thấy dữ liệu hợp lệ. Vui lòng kiểm tra lại định dạng!");
-            return;
-        }
-
-        // Tạo chuỗi code JavaScript
-        const jsString = "const vocabList = " + JSON.stringify(vocabArray, null, 4) + ";\n\n// Xuất biến để sử dụng ở file khác (Bỏ comment nếu dùng Module)\n// export default vocabList;";
-        
-        document.getElementById('outputText').value = jsString;
-    }
-
-    function copyResult() {
-        const outputText = document.getElementById('outputText');
-        if (!outputText.value) {
-            alert("Chưa có code để copy!");
-            return;
-        }
-        outputText.select();
-        document.execCommand('copy');
-        
-        // Đổi text nút tạm thời để báo hiệu đã copy
-        const btn = document.querySelector('.btn-copy');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "✔ Đã Copy!";
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-        }, 2000);
-    }
-</script>
+    </script>
 
 </body>
 </html>
