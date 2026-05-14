@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Ngan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        input, button, select, textarea {
+            font-family: inherit;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 300;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8edf5 100%);
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 40px;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 760px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 0;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid #d2dae8;
+            background: #ffffff;
+            color: #4b6584;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(50, 50, 93, 0.08);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .controls-top,
+        .view-toggle {
+            width: 100%;
+            max-width: 760px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        select.tool-btn,
+        .tool-btn,
+        .toggle-btn {
+            border: 1px solid #d2dae8;
+            background: #ffffff;
+            color: #2c3e50;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            box-shadow: 0 10px 20px rgba(50, 50, 93, 0.05);
+        }
+
+        .tool-btn:hover,
+        .toggle-btn:hover {
+            transform: translateY(-1px);
+            border-color: #7a5cff;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-color: transparent;
+        }
+
+        .flashcard-container {
+            width: 100%;
+            max-width: 760px;
+            height: clamp(340px, 60vh, 480px);
+            perspective: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .flashcard:hover {
+            transform: scale(1.02) translateY(-5px);
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard.is-flipped:hover {
+            transform: rotateY(180deg) scale(1.02) translateY(-5px);
+        }
+
+        .card-face {
+            position: absolute;
+            inset: 0;
+            background: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 20px 45px rgba(56, 73, 107, 0.12);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backface-visibility: hidden;
+            text-align: center;
+            transition: box-shadow 0.4s ease;
+        }
+
+        .flashcard:hover .card-face {
+            box-shadow: 0 35px 65px rgba(56, 73, 107, 0.25);
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: #f6f8ff;
+        }
+
+        .word-en {
+            font-size: clamp(24px, 5vw, 34px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 14px;
+            color: #2c3e50;
+            padding: 0 10px;
+        }
+
+        .word-ipa {
+            color: #6c7a93;
+            font-size: clamp(14px, 3vw, 16px);
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+
+        .word-vi {
+            font-size: clamp(20px, 4.5vw, 28px);
+            font-weight: 700;
+            color: #273c75;
+            margin-bottom: 12px;
+            padding: 0 10px;
+        }
+
+        .word-pos {
+            font-size: clamp(14px, 3vw, 15px);
+            color: #4b6584;
+            margin-bottom: 16px;
+        }
+
+        .word-ex {
+            font-size: clamp(14px, 3.5vw, 18px);
+            line-height: 1.7;
+            color: #404c63;
+            max-width: 640px;
+            padding: 0 10px;
+        }
+
+        .navigation {
+            width: 100%;
+            max-width: 760px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            flex: 1 1 180px;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 15px 30px rgba(118, 75, 162, 0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-learned {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+       }
+
+        .btn-notlearned {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .progress {
+            font-size: 15px;
+            color: #5d6d7e;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .audio-btn {
+            background: none; border: none; font-size: 28px; cursor: pointer;
+            margin-bottom: 12px; transition: transform 0.2s; color: #7a5cff;
+        }
+        .audio-btn:hover { transform: scale(1.15); }
+
+        #vocabListContainer {
+            display: none;
+            width: 100%;
+            max-width: 760px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 45px rgba(56, 73, 107, 0.08);
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        #vocabListContainer.show {
+            display: block;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 160px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid #d2dae8;
+            outline: none;
+            font-size: 14px;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #7a5cff;
+            box-shadow: 0 0 0 3px rgba(122, 92, 255, 0.2);
+        }
+
+        .search-box button {
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 14px;
+            padding: 14px 18px;
+            cursor: pointer;
+            font-weight: 700;
+            min-width: 110px;
+        }
+
+        .search-box button:hover {
+            transform: translateY(-1px);
+        }
+
+        .vocab-list {
+            border: 1px solid #e7ecf6;
+            border-radius: 18px;
+            overflow: hidden;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .vocab-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .vocab-list::-webkit-scrollbar-thumb {
+            background: #c1c9d6;
+            border-radius: 10px;
+        }
+        .vocab-list::-webkit-scrollbar-track {
+            background: #f1f4fb;
+        }
+
+        .vocab-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid #f1f4fb;
+            align-items: center;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .vocab-item:last-child {
+            border-bottom: none;
+        }
+
+        .vocab-item:hover {
+            background: #f8faff;
+        }
+
+        .vocab-item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .vocab-item-word {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .vocab-item-meaning {
+            font-size: 14px;
+            color: #5d6d7e;
+        }
+
+        .vocab-item-type {
+            font-size: 13px;
+            color: #7a8fa6;
+            font-style: italic;
+        }
+
+        .status-badge {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .status-learned {
+            background: #d4f7e0;
+            color: #1b9c53;
+        }
+
+        .status-notlearned {
+            background: #ffe8ea;
+            color: #c0392b;
+        }
+
+        .status-notstatus {
+            background: #f4f6fb;
+            color: #7a8da8;
+        }
+
+        .vocab-count {
+            margin-top: 16px;
+            text-align: center;
+            color: #5d6d7e;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        #groupOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 22, 38, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 18px;
+        }
+
+        #groupOverlay.show {
+            display: flex;
+        }
+
+        .group-box {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(25, 42, 70, 0.16);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .group-box h3 {
+            margin: 0;
+            font-size: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .checkbox-list {
+            display: grid;
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #405275;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+
+        .group-btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-group-action {
+            flex: 1;
+            border: none;
+            border-radius: 14px;
+            padding: 13px 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            background: #eef1f8;
+            color: #4b647a;
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+        }
+
+        .btn-cancel:hover,
+        .btn-apply:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Overlay Mật Khẩu */
+        #passwordOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 22, 38, 0.85); backdrop-filter: blur(8px); display: flex;
+            justify-content: center; align-items: center; z-index: 9999;
+        }
+        .password-box {
+            background: white; padding: 32px 24px; border-radius: 24px; text-align: center;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.2); max-width: 360px; width: 90%;
+        }
+        .password-box h2 { color: #2c3e50; margin: 0 0 10px; font-size: 22px; }
+        .password-box p { color: #5d6d7e; margin-bottom: 20px; font-size: 14px; }
+        .password-box input {
+            width: 100%; padding: 14px 16px; margin-bottom: 20px;
+            border: 1px solid #d2dae8; border-radius: 14px; font-size: 15px;
+            font-family: inherit; outline: none; transition: 0.3s; text-align: center;
+        }
+        .password-box input:focus { border-color: #7a5cff; box-shadow: 0 0 0 3px rgba(122, 92, 255, 0.2); }
+        .password-btn-group { display: flex; gap: 12px; }
+        .btn-pw-back, .btn-pw-submit {
+            flex: 1; padding: 12px 0; border-radius: 14px; font-weight: 600; 
+            font-size: 15px; transition: 0.3s; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;
+        }
+        .btn-pw-back { text-decoration: none; color: #4b6584; background: #f1f4fb; }
+        .btn-pw-back:hover { background: #e2e8f4; }
+        .btn-pw-submit { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-pw-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3); }
+        #passwordError { color: #e74c3c; font-size: 13px; margin: -10px 0 15px; display: none; font-weight: 500; }
+
+        @media (max-width: 600px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+                margin-bottom: 20px;
+            }
+            .back-btn {
+                position: static;
+            }
+            h1 {
+                align-self: center;
+                font-size: 24px;
+            }
+            .flashcard-container {
+                height: 65vh;
+                min-height: 400px;
+            }
+
+            .controls-top {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .view-toggle {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .navigation {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .tool-btn,
+            .toggle-btn,
+            .nav-btn {
+                width: 100%;
+                padding: 12px 8px;
+                font-size: 13px;
+                white-space: normal;
+                line-height: 1.2;
+            }
+            
+            select.tool-btn {
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .btn-group-action,
+            .search-box button {
+                width: 100%;
+            }
+
+            .card-face {
+                padding: 20px 15px;
+            }
+            
+            .password-box { padding: 30px 20px; }
+            .password-btn-group { flex-direction: column; gap: 12px; }
+            .btn-pw-back, .btn-pw-submit { width: 100%; flex: none; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Danh sách từ vựng Ngan Vocab</h1>
+    <!-- Lớp phủ yêu cầu mật khẩu -->
+    <div id="passwordOverlay">
+        <div class="password-box">
+            <h2>Nhập mật khẩu</h2>
+            <p>Vui lòng nhập mật khẩu để học mục <strong>NGAN Vocab</strong>.</p>
+            <input type="password" id="passwordInput" placeholder="Mật khẩu...">
+            <p id="passwordError">Mật khẩu không đúng, vui lòng thử lại!</p>
+            <div class="password-btn-group">
+                <a href="index.html" class="btn-pw-back">Quay lại</a>
+                <button id="btnSubmitPassword" class="btn-pw-submit">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+    <div class="header-container">
+        <a href="index.html" class="back-btn">⬅ Quay lại</a>
+        <h1>NGAN Vocab Flashcards</h1>
+    </div>
+
+    <div class="controls-top">
+        <select id="groupSelect" class="tool-btn" style="appearance: auto;"></select>
+        <button id="btnReview" class="tool-btn">⭐ Cần ôn</button>
+        <button id="btnShuffle" class="tool-btn">🔀 Đảo thứ tự</button>
+        <button id="btnSpeak" class="tool-btn">🔊 Phát âm</button>
+    </div>
+
+    <div class="view-toggle">
+        <button id="btnFlashcardView" class="toggle-btn active">💳 Flashcard</button>
+        <button id="btnListView" class="toggle-btn">📋 Danh sách</button>
+    </div>
+
+    <div class="flashcard-container" id="flashcardContainer">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face card-front">
+                <div class="word-en" id="wordEn">Đang tải dữ liệu...</div>
+                <div class="word-ipa" id="wordIpa"></div>
+                <div class="word-pos" id="wordPos"></div>
+            </div>
+            <div class="card-face card-back">
+                <div class="word-en" id="wordEnBack" style="font-size:22px; margin-bottom:5px;"></div>
+                <button id="btnPlayAudioBack" class="audio-btn" title="Nghe lại phát âm">🔊</button>
+                <div class="word-vi" id="wordVi"></div>
+                <div class="word-ex" id="wordEx"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="vocabListContainer">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm từ vựng hoặc nghĩa...">
+            <button id="btnSearch">Tìm</button>
+        </div>
+        <div class="vocab-list" id="vocabListDiv"></div>
+        <div class="vocab-count" id="vocabCount">Tổng: 0 từ vựng</div>
+    </div>
+
+    <div class="navigation">
+        <button id="btnLearned" class="nav-btn btn-learned">Đã thuộc</button>
+        <button id="btnNotLearned" class="nav-btn btn-notlearned">Chưa thuộc</button>
+    </div>
+
+    <div class="progress" id="progressText">0 / 0</div>
+
+    <script src="nganvocab.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            // --- CẤU HÌNH MẬT KHẨU ---
+            const SECTION_PASSWORD = "ngan1999"; // Mật khẩu cho NGAN Vocab
+            const overlay = document.getElementById('passwordOverlay');
+            const pwInput = document.getElementById('passwordInput');
+            const pwSubmit = document.getElementById('btnSubmitPassword');
+            const pwError = document.getElementById('passwordError');
+
+            if (sessionStorage.getItem('unlocked_nganvocab') === 'true') {
+                if (overlay) overlay.style.display = 'none';
+            }
+
+            function checkPassword() {
+                if (pwInput.value === SECTION_PASSWORD) {
+                    try { sessionStorage.setItem('unlocked_nganvocab', 'true'); } catch(e) {}
+                    if (overlay) overlay.style.display = 'none';
+                    unlockAudio();
+                } else {
+                    if (pwError) pwError.style.display = 'block';
+                    if (pwInput) {
+                        pwInput.value = '';
+                        pwInput.focus();
+                    }
+                }
+            }
+
+            if (pwSubmit) pwSubmit.addEventListener('click', checkPassword);
+            if (pwInput) pwInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
+
+            // --- AUDIO TTS TỐI ƯU ---
+            let audioUnlocked = false;
+            let synth = window.speechSynthesis;
+            let voices = [];
+            
+            function populateVoices() {
+                if (synth) voices = synth.getVoices();
+            }
+            if (synth) {
+                populateVoices();
+                if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = populateVoices;
+            }
+
+            function unlockAudio() {
+                if (!audioUnlocked && synth) {
+                    let u = new SpeechSynthesisUtterance('');
+                    u.volume = 0;
+                    synth.speak(u);
+                    audioUnlocked = true;
+                }
+            }
+
+            document.addEventListener('click', unlockAudio, { once: true });
+            document.addEventListener('touchstart', unlockAudio, { once: true });
+
+            function speakWord(text) {
+                unlockAudio();
+                if (!text || !synth) return;
+                if (synth.speaking) synth.cancel();
+                
+                const cleanWord = text.replace(/\[.*?\]/g, '').split('/')[0].trim();
+                const utterance = new SpeechSynthesisUtterance(cleanWord);
+                utterance.rate = 0.9; // Tốc độ vừa phải dễ nghe
+                
+                // Chọn giọng hay nhất (Ưu tiên UK Premium -> Samantha iOS -> UK -> US)
+                let bestVoice = voices.find(v => v.lang === 'en-GB' && (v.name.includes('Google') || v.name.includes('Premium') || v.name.includes('Enhanced')))
+                             || voices.find(v => v.name.includes('Samantha')) 
+                             || voices.find(v => v.lang === 'en-GB' && v.name.includes('Arthur'))
+                             || voices.find(v => v.lang === 'en-GB' && v.name.includes('Daniel'))
+                             || voices.find(v => v.lang === 'en-GB')
+                             || voices.find(v => v.lang === 'en-US' && v.name.includes('Google'))
+                             || voices.find(v => v.lang.startsWith('en'))
+                             || voices[0];
+                
+                if (bestVoice) utterance.voice = bestVoice;
+                synth.speak(utterance);
+            }
+
+            const wordsPerGroup = 20;
+            let currentGroup = [];
+            let currentIndex = 0;
+            let currentView = 'flashcard';
+
+            function getSafeArray(key, defaultValue = []) {
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (!raw) return defaultValue;
+                    const parsed = JSON.parse(raw);
+                    return Array.isArray(parsed) ? parsed : defaultValue;
+                } catch (error) {
+                    return defaultValue;
+                }
+            }
+
+            function setSafeItem(key, value) {
+                try {
+                    localStorage.setItem(key, value);
+                } catch (error) {
+                    // ignore storage failures
+                }
+            }
+
+            function getSafeItem(key) {
+                try {
+                    return localStorage.getItem(key);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            let difficultWords = getSafeArray('nganvocab_difficult_words');
+            let learnedWords = getSafeArray('nganvocab_learned_words');
+            const groupSelect = document.getElementById('groupSelect');
+            const flashcardContainer = document.getElementById('flashcardContainer');
+            const flashcard = document.getElementById('flashcard');
+            const wordEn = document.getElementById('wordEn');
+            const wordEnBack = document.getElementById('wordEnBack');
+            const wordVi = document.getElementById('wordVi');
+            const wordIpa = document.getElementById('wordIpa');
+            const wordPos = document.getElementById('wordPos');
+            const wordEx = document.getElementById('wordEx');
+            const btnLearned = document.getElementById('btnLearned');
+            const btnNotLearned = document.getElementById('btnNotLearned');
+            const btnShuffle = document.getElementById('btnShuffle');
+            const btnReview = document.getElementById('btnReview');
+            const btnSpeak = document.getElementById('btnSpeak');
+            const btnFlashcardView = document.getElementById('btnFlashcardView');
+            const btnListView = document.getElementById('btnListView');
+            const vocabListContainer = document.getElementById('vocabListContainer');
+            const vocabListEl = document.getElementById('vocabListDiv');
+            const searchInput = document.getElementById('searchInput');
+            const btnSearch = document.getElementById('btnSearch');
+            const vocabCount = document.getElementById('vocabCount');
+            const progressText = document.getElementById('progressText');
+            const navigationBar = document.querySelector('.navigation');
+
+            let safeVocabData = [];
+            let rawData;
+
+            if (typeof vocabularyList !== 'undefined') rawData = vocabularyList;
+            else if (typeof vocabList !== 'undefined') rawData = vocabList;
+            else if (typeof vocabData !== 'undefined') rawData = vocabData;
+            else if (window.vocabData) rawData = window.vocabData;
+
+            if (Array.isArray(rawData) && rawData.length > 0) {
+                safeVocabData = rawData.map((item, idx) => {
+                    let meaning = item.vi || item.meaning || '';
+                    let partOfSpeech = item.pos || item.type || '';
+                    
+                    // Hoán đổi lại nếu nghĩa tiếng việt đang nằm ở 'pos' và loại từ nằm ở 'vi'
+                    if (item.vi && item.vi.match(/^[a-z]+\.$/i) && item.pos) {
+                        partOfSpeech = item.vi;
+                        meaning = item.pos;
+                    } else if (item.pos && item.pos.match(/^[a-z]+\.$/i)) {
+                        partOfSpeech = item.pos;
+                    }
+
+                    return {
+                        num: item.num || item.id || (idx + 1),
+                        en: item.en || item.word || '',
+                        vi: meaning,
+                        ipa: item.ipa || item.pronunciation || '',
+                        pos: partOfSpeech,
+                        ex: item.ex || item.example || ''
+                    };
+                });
+            }
+
+            if (!safeVocabData.length) {
+                const errEl = document.getElementById('wordEn');
+                if (errEl) errEl.innerHTML = '<span style="font-size:20px; line-height:1.5;">Lỗi: Không nạp được dữ liệu.<br>Hãy kiểm tra lại xem tệp nganvocab.js đã chuẩn hay chưa.</span>';
+                return;
+            }
+
+            initApp();
+
+            function initApp() {
+                setSafeItem('nganvocab_total_words', safeVocabData.length);
+                let savedGroups = getSafeArray('nganvocab_selected_groups', ['0']);
+                if (!savedGroups.length) savedGroups = ['0'];
+
+                function switchView(view) {
+                    currentView = view;
+                    if (view === 'list') {
+                        vocabListContainer.classList.add('show');
+                        flashcardContainer.style.display = 'none';
+                        if (navigationBar) navigationBar.style.display = 'none';
+                        btnFlashcardView.classList.remove('active');
+                        btnListView.classList.add('active');
+                        updateListView();
+                    } else {
+                        vocabListContainer.classList.remove('show');
+                        flashcardContainer.style.display = 'block';
+                        if (navigationBar) navigationBar.style.display = 'flex';
+                        btnFlashcardView.classList.add('active');
+                        btnListView.classList.remove('active');
+                    }
+                }
+
+                btnFlashcardView.addEventListener('click', () => switchView('flashcard'));
+                btnListView.addEventListener('click', () => switchView('list'));
+
+                renderGroupSelect(savedGroups[0]);
+
+                groupSelect.addEventListener('change', (e) => {
+                    savedGroups = [e.target.value];
+                    setSafeItem('nganvocab_selected_groups', JSON.stringify(savedGroups));
+                    loadGroups(savedGroups);
+                });
+
+                btnShuffle.addEventListener('click', shuffleCurrentGroup);
+                btnReview.addEventListener('click', () => {
+                    const reviewGroup = ['difficult'];
+                    setSafeItem('nganvocab_selected_groups', JSON.stringify(reviewGroup));
+                    renderGroupSelect('difficult');
+                    loadGroups(reviewGroup);
+                });
+                
+                const btnPlayAudioBack = document.getElementById('btnPlayAudioBack');
+                if (btnPlayAudioBack) {
+                    btnPlayAudioBack.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (currentGroup.length > 0 && currentGroup[currentIndex].en) {
+                            speakWord(currentGroup[currentIndex].en);
+                        }
+                    });
+                }
+
+                btnSpeak.addEventListener('click', () => {
+                    if (currentGroup.length > 0 && currentGroup[currentIndex].en) {
+                        speakWord(currentGroup[currentIndex].en);
+                    }
+                });
+                
+                flashcard.addEventListener('click', () => {
+                    flashcard.classList.toggle('is-flipped');
+                    if (flashcard.classList.contains('is-flipped') && currentGroup.length > 0) {
+                        speakWord(currentGroup[currentIndex].en);
+                    }
+                });
+                btnSearch.addEventListener('click', () => searchVocab(searchInput.value));
+                searchInput.addEventListener('input', (event) => searchVocab(event.target.value));
+                searchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') searchVocab(searchInput.value);
+                });
+
+                loadGroups(savedGroups);
+            }
+
+            function renderGroupSelect(selectedGroup) {
+                const totalGroups = Math.ceil(safeVocabData.length / wordsPerGroup);
+                groupSelect.innerHTML = '';
+
+                const optDiff = document.createElement('option');
+                optDiff.value = 'difficult';
+                optDiff.text = `⭐ Cần ôn tập (${difficultWords.length})`;
+                if (selectedGroup === 'difficult') optDiff.selected = true;
+                groupSelect.appendChild(optDiff);
+
+                for (let i = 0; i < totalGroups; i += 1) {
+                    const start = i * wordsPerGroup + 1;
+                    const end = Math.min((i + 1) * wordsPerGroup, safeVocabData.length);
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.text = `Nhóm ${i + 1} (Từ ${start} - ${end})`;
+                    if (selectedGroup === String(i)) opt.selected = true;
+                    groupSelect.appendChild(opt);
+                }
+            }
+
+            function updateDifficultCount() {
+                if (groupSelect && groupSelect.options.length > 0) {
+                    groupSelect.options[0].text = `⭐ Cần ôn tập (${difficultWords.length})`;
+                }
+            }
+
+            function loadGroups(groupIds) {
+                currentGroup = [];
+                let hasDifficult = false;
+
+                groupIds.forEach(groupId => {
+                    if (groupId === 'difficult') {
+                        const difficultSet = safeVocabData.filter(word => difficultWords.includes(word.num));
+                        currentGroup = currentGroup.concat(difficultSet);
+                        hasDifficult = true;
+                    } else {
+                        const groupIndex = parseInt(groupId);
+                        if (!Number.isNaN(groupIndex)) {
+                            currentGroup = currentGroup.concat(safeVocabData.slice(groupIndex * wordsPerGroup, groupIndex * wordsPerGroup + wordsPerGroup));
+                        }
+                    }
+                });
+
+                currentGroup = currentGroup.filter((item, index, self) => self.findIndex(entry => entry.num === item.num) === index);
+
+                if (!currentGroup.length) {
+                    const message = hasDifficult ? 'Tuyệt vời! Không còn từ cần ôn tập.' : 'Danh sách này không có từ nào. Vui lòng chọn nhóm khác.';
+                    showEmptyState(message);
+                    return;
+                }
+
+                btnLearned.disabled = false;
+                btnNotLearned.disabled = false;
+                btnShuffle.style.display = 'inline-flex';
+                searchInput.value = '';
+
+                const savedId = getSafeItem('nganvocab_current_word_id');
+                if (savedId) {
+                    const savedIndex = currentGroup.findIndex(word => String(word.num) === savedId);
+                    currentIndex = savedIndex >= 0 ? savedIndex : 0;
+                } else {
+                    currentIndex = 0;
+                }
+
+                updateListView();
+                updateDisplay();
+            }
+
+            function shuffleCurrentGroup() {
+                for (let i = currentGroup.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [currentGroup[i], currentGroup[j]] = [currentGroup[j], currentGroup[i]];
+                }
+                currentIndex = 0;
+                updateDisplay();
+            }
+
+            function updateDisplay() {
+                if (!currentGroup.length) return;
+
+                flashcard.classList.remove('is-flipped');
+                setTimeout(() => {
+                    const item = currentGroup[currentIndex];
+                    if (!item) return;
+
+                    wordEn.textContent = item.en;
+                    if (wordEnBack) wordEnBack.textContent = item.en;
+                    wordVi.textContent = item.vi;
+                    wordIpa.textContent = item.ipa;
+                    wordPos.textContent = item.pos;
+                    wordEx.textContent = item.ex;
+
+                    updateNavigationButtons();
+                    updateProgress();
+                    setSafeItem('nganvocab_current_word_id', String(item.num));
+                }, 150);
+            }
+
+            function updateNavigationButtons() {
+                const currentItem = currentGroup[currentIndex];
+                if (!currentItem) return;
+
+                const isLearned = learnedWords.includes(currentItem.num);
+                const isDifficult = difficultWords.includes(currentItem.num);
+
+                btnLearned.disabled = false;
+                btnNotLearned.disabled = false;
+
+                btnLearned.textContent = isLearned ? 'Đã thuộc ✓' : 'Đã thuộc';
+                btnNotLearned.textContent = isDifficult ? 'Chưa thuộc ✗' : 'Chưa thuộc';
+            }
+
+            function updateProgress() {
+                progressText.textContent = `${currentIndex + 1} / ${currentGroup.length}`;
+            }
+
+            function nextWord() {
+                if (currentIndex < currentGroup.length - 1) {
+                    currentIndex++;
+                    updateDisplay();
+                }
+            }
+
+            function prevWord() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateDisplay();
+                }
+            }
+
+            function handleWord(learned) {
+                if (!currentGroup.length) return;
+                const currentItem = currentGroup[currentIndex];
+                if (!currentItem) return;
+
+                if (learned) {
+                    if (difficultWords.includes(currentItem.num)) {
+                        const idx = difficultWords.indexOf(currentItem.num);
+                        if (idx !== -1) difficultWords.splice(idx, 1);
+                    }
+                    if (!learnedWords.includes(currentItem.num)) {
+                        learnedWords.push(currentItem.num);
+                    }
+                } else {
+                    if (!difficultWords.includes(currentItem.num)) {
+                        difficultWords.push(currentItem.num);
+                    }
+                    const learnedIndex = learnedWords.indexOf(currentItem.num);
+                    if (learnedIndex !== -1) learnedWords.splice(learnedIndex, 1);
+                }
+
+                setSafeItem('nganvocab_difficult_words', JSON.stringify(difficultWords));
+                setSafeItem('nganvocab_learned_words', JSON.stringify(learnedWords));
+                updateDifficultCount();
+                updateListView();
+
+                if (currentIndex < currentGroup.length - 1) {
+                    currentIndex++;
+                    updateDisplay();
+                } else {
+                    alert('Bạn đã hoàn thành danh sách này.');
+                }
+            }
+
+            btnLearned.addEventListener('click', () => handleWord(true));
+            btnNotLearned.addEventListener('click', () => handleWord(false));
+
+            function updateListView() {
+                if (currentView !== 'list') return;
+                vocabListEl.innerHTML = '';
+                const filteredData = currentGroup.length ? currentGroup : safeVocabData;
+
+                filteredData.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'vocab-item';
+                    itemDiv.onclick = () => {
+                        currentIndex = currentGroup.indexOf(item);
+                        switchView('flashcard');
+                        updateDisplay();
+                    };
+
+                    const isLearned = learnedWords.includes(item.num);
+                    const isDifficult = difficultWords.includes(item.num);
+                    let statusClass = 'status-notstatus';
+                    let statusText = '○';
+                    if (isLearned) {
+                        statusClass = 'status-learned';
+                        statusText = '✓';
+                    } else if (isDifficult) {
+                        statusClass = 'status-notlearned';
+                        statusText = '✗';
+                    }
+
+                    itemDiv.innerHTML = `
+                        <div class="vocab-item-content">
+                            <div class="vocab-item-word">${item.en}</div>
+                            <div class="vocab-item-meaning">${item.vi}</div>
+                            <div class="vocab-item-type">${item.pos}</div>
+                        </div>
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                    `;
+                    vocabListEl.appendChild(itemDiv);
+                });
+
+                vocabCount.textContent = `Tổng: ${filteredData.length} từ vựng`;
+            }
+
+            function searchVocab(query) {
+                if (!query.trim()) {
+                    updateListView();
+                    return;
+                }
+
+                const filtered = safeVocabData.filter(item =>
+                    item.en.toLowerCase().includes(query.toLowerCase()) ||
+                    item.vi.toLowerCase().includes(query.toLowerCase()) ||
+                    item.ex.toLowerCase().includes(query.toLowerCase())
+                );
+
+                vocabListEl.innerHTML = '';
+                filtered.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'vocab-item';
+                    itemDiv.onclick = () => {
+                        currentGroup = [item];
+                        currentIndex = 0;
+                        switchView('flashcard');
+                        updateDisplay();
+                    };
+
+                    const isLearned = learnedWords.includes(item.num);
+                    const isDifficult = difficultWords.includes(item.num);
+                    let statusClass = 'status-notstatus';
+                    let statusText = '○';
+                    if (isLearned) {
+                        statusClass = 'status-learned';
+                        statusText = '✓';
+                    } else if (isDifficult) {
+                        statusClass = 'status-notlearned';
+                        statusText = '✗';
+                    }
+
+                    itemDiv.innerHTML = `
+                        <div class="vocab-item-content">
+                            <div class="vocab-item-word">${item.en}</div>
+                            <div class="vocab-item-meaning">${item.vi}</div>
+                            <div class="vocab-item-type">${item.pos}</div>
+                        </div>
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                    `;
+                    vocabListEl.appendChild(itemDiv);
+                });
+
+                vocabCount.textContent = `Tìm thấy: ${filtered.length} từ vựng`;
+            }
+
+            function showEmptyState(message) {
+                wordEn.innerHTML = `<span style="font-size:20px; line-height:1.4;">${message}</span>`;
+                if (wordEnBack) wordEnBack.innerText = '';
+                wordIpa.innerText = '';
+                wordPos.innerText = '';
+                wordVi.innerText = '';
+                wordEx.innerText = '';
+                progressText.innerText = '0 / 0';
+                btnLearned.disabled = true;
+                btnNotLearned.disabled = true;
+                btnShuffle.style.display = 'none';
+                vocabListEl.innerHTML = '';
+                vocabCount.innerText = 'Tổng: 0 từ';
+                searchInput.value = '';
+            }
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (event) => {
+                if (currentView !== 'flashcard') return;
+                if (event.target.tagName === 'INPUT') return;
+
+                switch (event.key) {
+                    case 'ArrowRight':
+                    case ' ':
+                        event.preventDefault();
+                        nextWord();
+                        break;
+                    case 'ArrowLeft':
+                        event.preventDefault();
+                        prevWord();
+                        break;
+                    case '1':
+                        event.preventDefault();
+                        btnLearned.click();
+                        break;
+                    case '2':
+                        event.preventDefault();
+                        btnNotLearned.click();
+                        break;
+                    case 'f':
+                    case 'F':
+                        event.preventDefault();
+                        flashcard.classList.toggle('is-flipped');
+                       break;
+                    case 's':
+                    case 'S':
+                        event.preventDefault();
+                        btnSpeak.click();
+                        break;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
