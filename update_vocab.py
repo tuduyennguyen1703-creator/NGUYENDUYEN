@@ -1,37 +1,50 @@
 import pandas as pd
 import json
+import os
 
 def update_vocab_js(excel_file, js_file):
     print(f"⏳ Đang đọc dữ liệu từ '{excel_file}'...")
-    # Đọc file Excel, ép không lấy dòng đầu làm tiêu đề nếu đó là dữ liệu
-    df = pd.read_excel(excel_file, header=None).fillna("")
     
-    # Kiểm tra xem dòng đầu có thực sự là tiêu đề không (như 'num', 'id')
-    first_cell = str(df.iloc[0, 0]).strip().lower()
-    if first_cell in ['num', 'id', 'stt']:
-        df = df[1:].reset_index(drop=True)
+    if not os.path.exists(excel_file):
+        print(f"❌ LỖI: Không tìm thấy file Excel '{excel_file}'. Vui lòng kiểm tra lại đường dẫn và tên file.")
+        return
+
+    try:
+        df = pd.read_excel(excel_file, header=None).fillna("")
         
-    # Gán lại tên cột cho chuẩn xác với thứ tự Excel của bạn
-    col_names = ['num', 'en', 'pos', 'ipa', 'vi', 'ex']
-    df.columns = col_names[:len(df.columns)]
-    for col in col_names:
-        if col not in df.columns:
-            df[col] = ""
+        if df.empty:
+            print(f"⚠️ CẢNH BÁO: File Excel '{excel_file}' trống. Không có dữ liệu để cập nhật.")
+            return
+
+        first_cell_value = str(df.iloc[0, 0]).strip().lower()
+        if first_cell_value in ['num', 'id', 'stt']:
+            df = df[1:].reset_index(drop=True)
             
-    # Đảm bảo cột 'num' luôn là số nguyên
-    if 'num' in df.columns:
-        df['num'] = pd.to_numeric(df['num'], errors='coerce').fillna(0).astype(int)
+        col_names = ['num', 'en', 'pos', 'ipa', 'vi', 'ex']
         
-    # Chuyển đổi bảng dữ liệu thành danh sách các dictionary
-    vocab_list = df.to_dict(orient='records')
-    
-    # Ghi đè cấu trúc chuẩn vào file vocabreadingdata.js
-    with open(js_file, 'w', encoding='utf-8') as f:
-        f.write('const vocabData = ')
-        json.dump(vocab_list, f, ensure_ascii=False, indent=4)
-        f.write(';\n')
+        temp_df = pd.DataFrame(columns=col_names)
+        for i, col_name in enumerate(col_names):
+            if i < df.shape[1]:
+                temp_df[col_name] = df.iloc[:, i]
+            else:
+                temp_df[col_name] = ""
+        df = temp_df.copy()
+            
+        if 'num' in df.columns:
+            df['num'] = pd.to_numeric(df['num'], errors='coerce').fillna(0).astype(int)
+            
+        vocab_list = df.to_dict(orient='records')
         
-    print(f"✅ THÀNH CÔNG! Đã cập nhật {len(vocab_list)} từ vựng vào '{js_file}'.")
+        with open(js_file, 'w', encoding='utf-8') as f:
+            f.write('const vocabData = ')
+            json.dump(vocab_list, f, ensure_ascii=False, indent=4)
+            f.write(';\n')
+            
+        print(f"✅ THÀNH CÔNG! Đã cập nhật {len(vocab_list)} từ vựng vào '{js_file}'.")
+    except pd.errors.EmptyDataError:
+        print(f"⚠️ CẢNH BÁO: File Excel '{excel_file}' trống. Không có dữ liệu để cập nhật.")
+    except Exception as e:
+        print(f"❌ LỖI khi xử lý file '{excel_file}': {e}")
 
 if __name__ == "__main__":
     # Chạy hàm với tên file tương ứng

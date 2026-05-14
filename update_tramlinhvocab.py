@@ -48,14 +48,21 @@ def update_tramlinh_js(excel_file, js_file):
     if first_cell in ['num', 'id', 'stt']:
         df = df[1:].reset_index(drop=True)
 
-    col_names = ['num', 'en', 'pos', 'ipa', 'vi', 'ex']
-    df.columns = col_names[:len(df.columns)]
-    for col in col_names:
-        if col not in df.columns:
-            df[col] = ""
+    col_names = ['num', 'en', 'pos', 'ipa', 'vi', 'ex'] # Default column names for tramlinhvocab.js
+    
+    # Apply robust column renaming and adding/dropping logic
+    temp_df = pd.DataFrame(columns=col_names)
+    for i, col_name in enumerate(col_names):
+        if i < df.shape[1]:
+            temp_df[col_name] = df.iloc[:, i]
+        else:
+            temp_df[col_name] = "" # Add missing columns as empty
+    df = temp_df.copy() # Use the new DataFrame with correct columns and names
 
+    # Ensure 'num' column is integer
     if 'num' in df.columns:
         df['num'] = pd.to_numeric(df['num'], errors='coerce').fillna(0).astype(int)
+
 
     vocab_list = df.to_dict(orient='records')
     with open(js_file, 'w', encoding='utf-8') as f:
