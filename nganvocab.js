@@ -5999,4 +5999,4 @@ const vocabularyList = [
         "vi": "Hợp lí",
         "ex": ""
     }
-];
+]
