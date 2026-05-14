@@ -358,6 +358,11 @@
                 <span class="card-progress-text">Đã học: 0%</span>
                 <div class="card-progress-bar"></div>
             </a>
+            <a href="./course_ngan.html" class="course-btn" id="card-nganvocab">
+                📖 NGAN Vocab
+                <span class="card-progress-text">Đã học: 0%</span>
+                <div class="card-progress-bar"></div>
+            </a>
             <br><br>
             <button class="close-modal-btn"
                 onclick="document.getElementById('courseModal').style.display='none'">Đóng</button>
@@ -379,8 +384,9 @@
             { id: 'card-readingielts', prefix: 'readingielts' }, // Mục 9
             { id: 'card-thaovocab', prefix: 'thaovocab', isUiOnly: true },
             { id: 'card-tramlinh', prefix: 'tramlinh', isUiOnly: true },
+            { id: 'card-nganvocab', prefix: 'nganvocab', isUiOnly: true }, // Thêm mục NGAN Vocab
             // Mục gộp tính toán
-            { id: 'card-combined-course', prefixes: ['thaovocab', 'tramlinh'] },
+            { id: 'card-combined-course', prefixes: ['thaovocab', 'tramlinh', 'nganvocab'] },
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
